@@ -51,6 +51,29 @@ public class TaskMaster {
                     System.out.println(tasks.get(index - 1).toString());
                     break;
                 }
+                case "todo":
+                    tasks.add(new ToDo(task));
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  "+tasks.get(tasks.size() - 1).toString());
+                    System.out.println("Now you have "+tasks.size()+" tasks in the list.");
+                    break;
+                case "deadline":
+                    String[] deadline = task.split("/by");
+                    tasks.add(new Deadline(deadline[0].substring(8), deadline[1].trim()));
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  "+tasks.get(tasks.size() - 1).toString());
+                    System.out.println("Now you have "+tasks.size()+" tasks in the list.");
+                    break;
+                case "event":
+
+                    String[] event =  task.split("/");
+                    String from  = event[1].split(" ")[1]+" "+event[1].split(" ")[2];
+                    String to  = event[2].split(" ")[1];
+                    tasks.add(new Event(event[0],from,to));
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  "+tasks.get(tasks.size() - 1).toString());
+                    System.out.println("Now you have "+tasks.size()+" tasks in the list.");
+                    break;
                 default:
                     tasks.add(new Task(task));
                     System.out.println("added: " + task);
