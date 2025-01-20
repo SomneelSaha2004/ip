@@ -1,0 +1,12 @@
+todo read book
+todo borrow book
+list
+deadline return book /by Sunday
+list
+mark 2
+list
+unmark 2
+list
+event project meeting /from Mon 2pm /to 4pm
+list
+bye
