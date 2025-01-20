@@ -1,26 +1,21 @@
-@echo off
+@ECHO OFF
 
-REM Ensure the script runs from its own folder (text-ui-test)
-pushd "%~dp0"
+REM create bin directory if it doesn't exist
+if not exist ..\bin mkdir ..\bin
 
-REM Step one folder up to the project root
-cd ..
+REM delete output from previous run
+if exist ACTUAL.TXT del ACTUAL.TXT
 
-REM Make sure bin\ exists
-if not exist bin mkdir bin
-
-REM Remove old ACTUAL.TXT (if any)
-if exist text-ui-test\ACTUAL.TXT del text-ui-test\ACTUAL.TXT
-
-REM Compile all .java in src\main\java\main into bin\
-javac -cp . -Xlint:none -d bin src\main\java\main\*.java
+REM compile the code into the bin folder
+javac  -cp ..\src\main\java\main -Xlint:none -d ..\bin ..\src\main\java\main\TaskMaster.java
 IF ERRORLEVEL 1 (
     echo ********** BUILD FAILURE **********
     exit /b 1
 )
+REM no error here, errorlevel == 0
 
-REM Run the program with input.txt, write output to ACTUAL.TXT
-java -cp bin main.TaskMaster < text-ui-test\input.txt > text-ui-test\ACTUAL.TXT
+REM run the program, feed commands from input.txt file and redirect the output to the ACTUAL.TXT
+java -classpath ..\bin\TaskMaster.java Duke < input.txt > ACTUAL.TXT
 
-REM Compare ACTUAL.TXT to EXPECTED.TXT
-FC text-ui-test\ACTUAL.TXT text-ui-test\EXPECTED.TXT
+REM compare the output to the expected output
+FC ACTUAL.TXT EXPECTED.TXT
