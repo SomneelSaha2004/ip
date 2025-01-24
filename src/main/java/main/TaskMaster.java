@@ -14,10 +14,21 @@ public class TaskMaster {
                 
                 ____________________________________________________________""";
         System.out.println(logo);
-
+        String dataPath  = "data/TaskMaster.txt";
         Scanner sc = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
 
+        StringBuilder text = new StringBuilder();
+        try {
+            java.io.File file = new java.io.File(dataPath);
+            java.util.Scanner input = new java.util.Scanner(file);
+            while (input.hasNext()) {
+                text.append(input.nextLine()).append("\n");
+            }
+            input.close();
+        } catch (java.io.IOException e) {
+            System.out.println("An error occurred while reading tasks from file.");
+        }
+        ArrayList<Task> tasks = readTasks(text.toString());
         label:
         while (true) {
             System.out.print("> ");
@@ -208,7 +219,6 @@ public class TaskMaster {
                         System.out.println("  help             - Shows this help message");
                         System.out.println("  bye              - Exits TaskMaster");
                         break;
-
                     default:
                         throw new TaskMasterException("I'm sorry, but I don't know what that means. Type 'help' for available commands.");
                 }
@@ -216,8 +226,48 @@ public class TaskMaster {
                 System.out.println("____________________________________________________________");
                 System.out.println(e.getMessage());
             } finally {
+                saveTasksToFile(tasks,dataPath);
                 System.out.println("____________________________________________________________");
             }
         }
     }
+    public static void saveTasksToFile(ArrayList<Task> tasks,String dataPath) {
+        try {
+            java.io.FileWriter fw = new java.io.FileWriter(dataPath);
+            for (Task task : tasks) {
+                fw.write(task.save()+"\n");
+            }
+            fw.close();
+        } catch (java.io.IOException e) {
+            System.out.println("An error occurred while saving tasks to file.");
+        }
+    }
+
+    public static ArrayList<Task> readTasks(String text){
+        if(text.isBlank()){
+            return new ArrayList<>();
+        }
+        ArrayList<Task> tasks = new ArrayList<>();
+        String[] lines = text.split("\n");
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            String type =  parts[0].trim();
+            switch (type) {
+                case "T":
+                    tasks.add(new ToDo(parts[2],parts[1].trim().equals("1")));
+                    break;
+                case "D":
+                    tasks.add(new Deadline(parts[2],parts[1].trim().equals("1"),parts[3]));
+                    break;
+                case "E":
+
+                    tasks.add(new Event(parts[2],parts[1].trim().equals("1"),parts[3],parts[4]));
+                    break;
+                default:
+                    break;
+            }
+        }
+        return tasks;
+    }
 }
+
