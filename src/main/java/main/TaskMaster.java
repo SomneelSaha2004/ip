@@ -7,6 +7,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TaskMaster {
+    /**
+     * The main entry point for the TaskMaster application.
+     *
+     * This method initializes the application by loading tasks from a file and
+     * provides an interactive command-line interface for managing tasks.
+     *
+     * @param args Command-line arguments (not used in this application).
+     * @throws TaskMasterException If any application-specific error occurs.
+     */
     public static void main(String[] args) throws TaskMasterException {
         String logo = """
                 ____________________________________________________________
@@ -278,6 +287,14 @@ public class TaskMaster {
             }
         }
     }
+    /**
+     * Saves the list of tasks to a specified file.
+     *
+     * This method writes each task's serialized representation into the specified file.
+     *
+     * @param tasks    The list of tasks to save.
+     * @param dataPath The file path where tasks will be saved.
+     */
     public static void saveTasksToFile(ArrayList<Task> tasks,String dataPath) {
         try {
             java.io.FileWriter fw = new java.io.FileWriter(dataPath);
@@ -289,7 +306,15 @@ public class TaskMaster {
             System.out.println("An error occurred while saving tasks to file.");
         }
     }
-
+    /**
+     * Reads tasks from a string representation.
+     *
+     * This method parses task data from a string and reconstructs task objects,
+     * including ToDo, Deadline, and Event tasks.
+     *
+     * @param text The string containing serialized task data, with tasks separated by newlines.
+     * @return An {@code ArrayList<Task>} containing the parsed task objects.
+     */
     public static ArrayList<Task> readTasks(String text) {
         if (text.isBlank()) {
             return new ArrayList<>();
