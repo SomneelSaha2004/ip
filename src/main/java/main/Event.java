@@ -1,8 +1,10 @@
 package main;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Event extends Task{
-    protected String from,to;
-    public Event(String description,String from,String to){
+    protected LocalDateTime from,to;
+    public Event(String description,LocalDateTime from,LocalDateTime to){
         super(description);
         this.from =  from;
         this.to =  to;
@@ -10,8 +12,8 @@ public class Event extends Task{
     public Event(
         String description,
         boolean isDone,
-        String from,
-        String to
+        LocalDateTime from,
+        LocalDateTime to
     ){
         super(description,isDone);
         this.from = from;
@@ -25,5 +27,9 @@ public class Event extends Task{
     @Override
     public String save(){
         return "E," + super.save() + "," + from + "," + to;
+    }
+    @Override
+    public boolean isDue(LocalDate date){
+        return from.toLocalDate().isEqual(date);
     }
 }

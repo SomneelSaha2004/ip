@@ -1,5 +1,8 @@
 package main;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -29,6 +32,7 @@ public class TaskMaster {
             System.out.println("An error occurred while reading tasks from file.");
         }
         ArrayList<Task> tasks = readTasks(text.toString());
+
         label:
         while (true) {
             System.out.print("> ");
@@ -156,8 +160,15 @@ public class TaskMaster {
                         if (deadlineBy.isBlank()) {
                             throw new TaskMasterException("The 'by' part of a deadline cannot be empty.");
                         }
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
-                        tasks.add(new Deadline(deadlineDesc, deadlineBy));
+                        try {
+                            LocalDateTime localDateTime = LocalDateTime.parse(deadlineBy, dtf);
+                            tasks.add(new Deadline(deadlineDesc, localDateTime));
+                        } catch (java.time.format.DateTimeParseException e){
+                            throw new TaskMasterException("Please enter the deadline in the format 'dd/MM/yyyy HHmm'. e.g. '01/01/2021 1800'");
+                            }
+
                         System.out.println("____________________________________________________________");
                         System.out.println("Got it. I've added this task:");
                         System.out.println("  " + tasks.get(tasks.size() - 1));
@@ -194,14 +205,49 @@ public class TaskMaster {
                         if (toTime.isBlank()) {
                             throw new TaskMasterException("Please specify a valid end time for the event.");
                         }
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
-                        tasks.add(new Event(eventDesc, fromTime, toTime));
+                        try {
+                            LocalDateTime from = LocalDateTime.parse(fromTime, dtf);
+                            LocalDateTime to = LocalDateTime.parse(toTime, dtf);
+                            tasks.add(new Event(eventDesc, from, to));
+                        } catch (java.time.format.DateTimeParseException e){
+                            throw new TaskMasterException("Please enter the deadline in the format 'dd/MM/yyyy HHmm'. e.g. '01/01/2021 1800'");
+                        }
                         System.out.println("____________________________________________________________");
                         System.out.println("Got it. I've added this task:");
                         System.out.println("  " + tasks.get(tasks.size() - 1));
                         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                         break;
                     }
+                    case "agenda":
+                        if (remainder.isBlank()) {
+                            throw new TaskMasterException("Please specify the date you want to see the agenda for.");
+                        }
+
+                        try {
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                            LocalDate date = LocalDate.parse(remainder, dtf); // Parse as LocalDate
+
+                            System.out.println("____________________________________________________________");
+                            System.out.println("Here are the tasks on " + date.format(dtf) + ":");
+                            boolean hasTasks = false;
+
+                            for (Task task : tasks) {
+                                if (task.isDue(date)) { // Use LocalDate comparison
+                                    hasTasks = true;
+                                    System.out.println("  " + task);
+                                }
+                            }
+
+                            if (!hasTasks) {
+                                System.out.println("No tasks on this date!");
+                            }
+                            break;
+                        } catch (java.time.format.DateTimeParseException e) {
+                            throw new TaskMasterException("Please enter the date in the format 'dd/MM/yyyy'. e.g. '01/01/2021'");
+                        }
+
 
                     case "help":
                         // New 'help' command
@@ -210,12 +256,13 @@ public class TaskMaster {
                         System.out.println("  list             - Lists all tasks");
                         System.out.println("  todo DESC        - Adds a to-do task (e.g., todo read book)");
                         System.out.println("  deadline DESC /by DEADLINE");
-                        System.out.println("                   - Adds a deadline task");
+                        System.out.println("                   - Adds a deadline task (e.g., deadline submit report /by 02/12/2019 1800)");
                         System.out.println("  event DESC /from START /to END");
-                        System.out.println("                   - Adds an event task");
+                        System.out.println("                   - Adds an event task (e.g., event team meeting /from 02/12/2019 0900 /to 02/12/2019 1100)");
                         System.out.println("  mark INDEX       - Marks task #INDEX as done");
                         System.out.println("  unmark INDEX     - Marks task #INDEX as not done");
                         System.out.println("  delete INDEX     - Deletes task #INDEX");
+                        System.out.println("  agenda DATE      - Lists all tasks due on the specified date (e.g., agenda 02/12/2019)");
                         System.out.println("  help             - Shows this help message");
                         System.out.println("  bye              - Exits TaskMaster");
                         break;
@@ -243,31 +290,54 @@ public class TaskMaster {
         }
     }
 
-    public static ArrayList<Task> readTasks(String text){
-        if(text.isBlank()){
+    public static ArrayList<Task> readTasks(String text) {
+        if (text.isBlank()) {
             return new ArrayList<>();
         }
+
         ArrayList<Task> tasks = new ArrayList<>();
         String[] lines = text.split("\n");
+
+
+        DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
         for (String line : lines) {
             String[] parts = line.split(",");
-            String type =  parts[0].trim();
+            String type = parts[0].trim();
+
             switch (type) {
                 case "T":
-                    tasks.add(new ToDo(parts[2],parts[1].trim().equals("1")));
+                    boolean isDoneTodo = parts[1].trim().equals("1");
+                    String todoDescription = parts[2].trim();
+                    tasks.add(new ToDo(todoDescription, isDoneTodo));
                     break;
-                case "D":
-                    tasks.add(new Deadline(parts[2],parts[1].trim().equals("1"),parts[3]));
-                    break;
-                case "E":
 
-                    tasks.add(new Event(parts[2],parts[1].trim().equals("1"),parts[3],parts[4]));
+                case "D":
+                    boolean isDoneDeadline = parts[1].trim().equals("1");
+                    String deadlineDescription = parts[2].trim();
+                    String deadlineDateTimeStr = parts[3].trim();
+                    LocalDateTime deadlineDateTime = LocalDateTime.parse(deadlineDateTimeStr, dtf);
+                    tasks.add(new Deadline(deadlineDescription, isDoneDeadline, deadlineDateTime));
                     break;
+
+                case "E":
+                    boolean isDoneEvent = parts[1].trim().equals("1");
+                    String eventDescription = parts[2].trim();
+                    String eventStartDateTimeStr = parts[3].trim();
+                    String eventEndDateTimeStr = parts[4].trim();
+                    LocalDateTime eventStart = LocalDateTime.parse(eventStartDateTimeStr, dtf);
+                    LocalDateTime eventEnd = LocalDateTime.parse(eventEndDateTimeStr, dtf);
+                    tasks.add(new Event(eventDescription, isDoneEvent, eventStart, eventEnd));
+                    break;
+
                 default:
+                    System.out.println("Unknown task type: " + type);
                     break;
             }
         }
+
         return tasks;
     }
+
 }
 

@@ -1,6 +1,6 @@
 package main;
-
-public class Task {
+import java.time.LocalDate;
+public abstract class Task {
     protected String description;
     protected boolean isDone;
 
@@ -33,4 +33,9 @@ public class Task {
     public String save(){
         return ((isDone)?1:0) + "," + description;
     }
+
+    public boolean isDue(LocalDate date){
+        return false;
+    }
+
 }
