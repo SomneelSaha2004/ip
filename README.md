@@ -32,11 +32,11 @@ TaskMaster is a simple command-line application for managing tasks. It supports 
 
 1. Compile the Java files:
     ```sh
-    javac -d bin src/main/java/main/*.java
+    javac -d bin src/TaskMaster/java/TaskMaster/*.java
     ```
 2. Run the application:
     ```sh
-    java -cp bin main.TaskMaster
+    java -cp bin TaskMaster.TaskMaster
     ```
 
 ## Usage
