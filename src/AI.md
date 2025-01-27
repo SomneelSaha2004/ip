@@ -9,6 +9,7 @@ AI tools such as ChatGPT were used to:
 - Refactor the codebase to adopt object-oriented programming (OOP) principles by modularizing the application into components like `Ui`, `Storage`, `Parser`, and `TaskList`.
 - Troubleshoot issues such as type mismatches and parsing errors, ensuring smooth functionality and resolving bugs efficiently.
 - Suggest reusable patterns for implementing commands like `agenda` and `help`, reducing redundancy.
+- Generate tests for testing the application's core functionalities, ensuring robustness and reliability.
 
 ### 2. Code Improvements
 AI provided support in generating and reviewing alternative implementations for various methods, which helped improve the overall structure and readability of the code. For example:

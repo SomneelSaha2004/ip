@@ -78,4 +78,8 @@ public class Event extends Task {
     public boolean isDue(LocalDate date) {
         return from.toLocalDate().isEqual(date);
     }
+
+    public LocalDateTime end(){
+        return to;
+    }
 }
