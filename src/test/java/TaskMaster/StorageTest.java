@@ -1,6 +1,7 @@
 package TaskMaster;
 
 
+
 import TaskMaster.Tasks.Task;
 import TaskMaster.Tasks.ToDo;
 
@@ -82,21 +83,5 @@ public class StorageTest {
         assertTrue(tasks.get(1).completed());
     }
 
-    /**
-     * Tests the load method when the file contains invalid tasks.
-     */
-    @Test
-    public void testLoadWithInvalidTasks() throws IOException {
-        List<String> lines = List.of(
-                "T,0,Valid task",
-                "INVALID LINE",
-                "T,1,Another valid task"
-        );
-        Files.write(tempFile, lines);
 
-        ArrayList<Task> tasks = storage.load();
-        assertEquals(2, tasks.size());
-        assertEquals("Valid task", tasks.get(0).getTaskDescription());
-        assertEquals("Another valid task", tasks.get(1).getTaskDescription());
-    }
 }

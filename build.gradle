@@ -31,13 +31,18 @@ test {
 }
 
 application {
-    mainClass.set(".TaskMaster.TaskMaster")
+    mainClass.set("TaskMaster.TaskMaster")
 }
 
 shadowJar {
     archiveBaseName = "TaskMaster"
     archiveClassifier = null
+    archiveVersion = null
+    manifest {
+        attributes 'Main-Class': 'TaskMaster.TaskMaster'
+    }
 }
+
 
 run{
     standardInput = System.in
