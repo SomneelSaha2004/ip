@@ -65,6 +65,9 @@ public class Parser {
             case "exit": {
                 return new ExitCommand();
             }
+            case "find": {
+                return new FindCommand(arguments);
+            }
             default:
                 throw new TaskMasterException("Unknown command: " + commandWord);
         }
