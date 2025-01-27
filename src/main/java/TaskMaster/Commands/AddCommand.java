@@ -73,4 +73,21 @@ public class AddCommand extends Command {
                 throw new TaskMasterException("Unknown task type: " + taskType);
         }
     }
+    /**
+     * Returns the type of task to add.
+     *
+     * @return The type of task to add.
+     */
+    public String getTaskType() {
+        return taskType;
+    }
+    /**
+     * Returns the arguments for the task.
+     *
+     * @return The arguments for the task.
+     */
+    public String getArguments() {
+        return arguments;
+    }
+
 }

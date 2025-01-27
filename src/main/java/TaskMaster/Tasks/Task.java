@@ -57,7 +57,14 @@ public abstract class Task {
     public void markAsNotDone() {
         this.isDone = false;
     }
-
+    /**
+     * Returns the completion status of the task.
+     *
+     * @return {@code true} if the task is completed; {@code false} otherwise.
+     */
+    public boolean completed(){
+        return this.isDone;
+    }
     /**
      * Returns the description of the task.
      *

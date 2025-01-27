@@ -16,6 +16,9 @@ dependencies {
 test {
     useJUnitPlatform()
 
+
+    include '**/TaskMaster/*'
+
     testLogging {
         events "passed", "skipped", "failed"
 
@@ -28,11 +31,11 @@ test {
 }
 
 application {
-    mainClass.set("seedu.duke.Duke")
+    mainClass.set(".TaskMaster.TaskMaster")
 }
 
 shadowJar {
-    archiveBaseName = "duke"
+    archiveBaseName = "TaskMaster"
     archiveClassifier = null
 }
 
