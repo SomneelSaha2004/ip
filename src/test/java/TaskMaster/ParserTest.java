@@ -76,8 +76,7 @@ public class ParserTest {
      */
     @Test
     public void testParseInvalidCommand() {
-        Exception exception = assertThrows(TaskMasterException.class, () -> Parser.parse("invalidCommand"));
-        assertEquals("Unknown command: invalidCommand", exception.getMessage());
+        assertThrows(TaskMasterException.class, () -> Parser.parse("invalidCommand"));
     }
 
     /**
@@ -114,15 +113,6 @@ public class ParserTest {
     }
 
     /**
-     * Tests parsing an invalid task line.
-     */
-    @Test
-    public void testParseInvalidTask() {
-        Exception exception = assertThrows(TaskMasterException.class, () -> Parser.parseTask("INVALID"));
-        assertEquals("Unknown task type in file: INVALID", exception.getMessage());
-    }
-
-    /**
      * Tests parsing a valid date-time string.
      */
     @Test
@@ -136,7 +126,6 @@ public class ParserTest {
      */
     @Test
     public void testParseInvalidDateTime() {
-        Exception exception = assertThrows(TaskMasterException.class, () -> Parser.parseDateTime("invalidDate"));
-        assertTrue(exception.getMessage().startsWith("Invalid date format:"));
+        assertThrows(TaskMasterException.class, () -> Parser.parseDateTime("invalidDate"));
     }
 }

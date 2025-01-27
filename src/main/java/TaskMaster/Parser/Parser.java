@@ -60,7 +60,10 @@ public class Parser {
                 return new AgendaCommand(date.toLocalDate());
             }
             case "help": {
-                return new HelpCommand(); // Add the HelpCommand
+                return new HelpCommand();
+            }
+            case "exit": {
+                return new ExitCommand();
             }
             default:
                 throw new TaskMasterException("Unknown command: " + commandWord);
