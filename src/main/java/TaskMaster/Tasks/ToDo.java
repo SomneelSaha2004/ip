@@ -1,8 +1,9 @@
-package main;
+package TaskMaster.Tasks;
+
 /**
  * Represents a To-Do task, which is a basic task with only a description and a completion status.
  */
-public class ToDo extends Task{
+public class ToDo extends Task {
     /**
      * Constructs a new ToDo task with the specified description.
      * The task is initialized as not done by default.

@@ -1,4 +1,4 @@
-package main;
+package TaskMaster.Exceptions;
 
 /**
  * Represents a custom exception specific to the TaskMaster application.

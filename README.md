@@ -10,6 +10,8 @@ TaskMaster is a simple command-line application for managing tasks. It supports 
 - Unmark tasks as not done
 - Delete tasks
 - Display help message
+- Agenda: View tasks due on a specific date
+- Supports multiple date formats (e.g., `d/M/yyyy HHmm`, `d-M-yyyy HHmm`, ISO format)
 
 ## Getting Started
 
@@ -32,11 +34,11 @@ TaskMaster is a simple command-line application for managing tasks. It supports 
 
 1. Compile the Java files:
     ```sh
-    javac -d bin src/main/java/main/*.java
+    javac -d bin src/TaskMaster/java/TaskMaster/*.java
     ```
 2. Run the application:
     ```sh
-    java -cp bin main.TaskMaster
+    java -cp bin TaskMaster.TaskMaster
     ```
 
 ## Usage
@@ -45,11 +47,12 @@ TaskMaster is a simple command-line application for managing tasks. It supports 
 
 - `list` - Lists all tasks
 - `todo DESC` - Adds a to-do task (e.g., `todo read book`)
-- `deadline DESC /by DEADLINE` - Adds a deadline task (e.g., `deadline return book /by Sunday`)
-- `event DESC /from START /to END` - Adds an event task (e.g., `event project meeting /from Mon 2pm /to 4pm`)
+- `deadline DESC /by DEADLINE` - Adds a deadline task (e.g., `deadline return book /by 02/12/2019 1800`)
+- `event DESC /from START /to END` - Adds an event task (e.g., `event project meeting /from 02/12/2019 0900 /to 02/12/2019 1100`)
 - `mark INDEX` - Marks task #INDEX as done
 - `unmark INDEX` - Marks task #INDEX as not done
 - `delete INDEX` - Deletes task #INDEX
+- `agenda DATE` - Lists all tasks due on the specified date (e.g., `agenda 02/12/2019`)
 - `help` - Shows the help message
 - `bye` - Exits TaskMaster
 
@@ -65,18 +68,17 @@ Now you have 1 task in the list.
 Here are the tasks in your list:
 1.[T][ ] borrow book
 
-> deadline return book /by Sunday
+> deadline return book /by 02/12/2019 1800
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: 02/12/2019 1800)
 Now you have 2 tasks in the list.
 
-> event project meeting /from Mon 2pm /to 4pm
+> event project meeting /from 02/12/2019 0900 /to 02/12/2019 1100
 Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: 02/12/2019 0900 to: 02/12/2019 1100)
 Now you have 3 tasks in the list.
 
-> list
-Here are the tasks in your list:
-1.[T][ ] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+> agenda 02/12/2019
+Here are the tasks on 02/12/2019:
+1.[D][ ] return book (by: 02/12/2019 1800)
+2.[E][ ] project meeting (from: 02/12/2019 0900 to: 02/12/2019 1100)
