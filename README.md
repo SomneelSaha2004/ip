@@ -23,7 +23,7 @@ TaskMaster is a simple command-line application for managing tasks. It supports 
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/SomneelSaha2004/TaskMaster.git
+    git clone https://github.com/SomneelSaha2004/ip.git
     ```
 2. Navigate to the project directory:
     ```sh
@@ -77,6 +77,8 @@ Now you have 2 tasks in the list.
 Got it. I've added this task:
   [E][ ] project meeting (from: 02/12/2019 0900 to: 02/12/2019 1100)
 Now you have 3 tasks in the list.
+
+
 
 > agenda 02/12/2019
 Here are the tasks on 02/12/2019:
