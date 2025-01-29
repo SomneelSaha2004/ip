@@ -20,7 +20,7 @@ test {
     useJUnitPlatform()
 
 
-    include '**/TaskMaster/*'
+    include '**/taskmaster/*'
 
     testLogging {
         events "passed", "skipped", "failed"
@@ -34,15 +34,15 @@ test {
 }
 
 application {
-    mainClass.set("TaskMaster.TaskMaster")
+    mainClass.set("taskmaster.TaskMaster")
 }
 
 shadowJar {
-    archiveBaseName = "TaskMaster"
+    archiveBaseName = "Taskmaster"
     archiveClassifier = null
     archiveVersion = null
     manifest {
-        attributes 'Main-Class': 'TaskMaster.TaskMaster'
+        attributes 'Main-Class': 'taskmaster.TaskMaster'
     }
 }
 

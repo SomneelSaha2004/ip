@@ -1,6 +1,6 @@
-# TaskMaster
+# taskmaster
 
-TaskMaster is a simple command-line application for managing tasks. It supports adding, listing, marking, unmarking, and deleting tasks. Tasks can be of three types: ToDo, Deadline, and Event.
+taskmaster is a simple command-line application for managing tasks. It supports adding, listing, marking, unmarking, and deleting tasks. Tasks can be of three types: ToDo, Deadline, and Event.
 
 ## Features
 
@@ -23,22 +23,22 @@ TaskMaster is a simple command-line application for managing tasks. It supports 
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/SomneelSaha2004/TaskMaster.git
+    git clone https://github.com/SomneelSaha2004/taskmaster.git
     ```
 2. Navigate to the project directory:
     ```sh
-    cd TaskMaster
+    cd taskmaster
     ```
 
 ### Running the Application
 
 1. Compile the Java files:
     ```sh
-    javac -d bin src/TaskMaster/java/TaskMaster/*.java
+    javac -d bin src/taskmaster/java/taskmaster/*.java
     ```
 2. Run the application:
     ```sh
-    java -cp bin TaskMaster.TaskMaster
+    java -cp bin taskmaster.taskmaster
     ```
 
 ## Usage
@@ -54,7 +54,7 @@ TaskMaster is a simple command-line application for managing tasks. It supports 
 - `delete INDEX` - Deletes task #INDEX
 - `agenda DATE` - Lists all tasks due on the specified date (e.g., `agenda 02/12/2019`)
 - `help` - Shows the help message
-- `bye` - Exits TaskMaster
+- `bye` - Exits taskmaster
 
 ### Example
 
