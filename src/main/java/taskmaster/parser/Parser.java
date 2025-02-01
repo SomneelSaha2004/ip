@@ -75,7 +75,7 @@ public class Parser {
             case "help":
                 return new HelpCommand();
             case "find":
-                return new FindCommand(arguments);
+                return new FindCommand(arguments.split(" "));
             default:
                 throw new TaskMasterException("Unknown command: " + commandWord);
         }
