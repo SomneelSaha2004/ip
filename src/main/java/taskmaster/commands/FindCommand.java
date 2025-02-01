@@ -2,7 +2,7 @@ package taskmaster.commands;
 
 import taskmaster.storage.Storage;
 import taskmaster.utils.TaskList;
-import taskmaster.ui.Ui;
+import taskmaster.tasks.Task;
 
 /**
  * Command to find tasks containing a given keyword.
@@ -23,21 +23,30 @@ public class FindCommand extends Command {
      * Executes the find command to search for tasks matching the keyword.
      *
      * @param tasks   The task list to search.
-     * @param ui      The user interface for displaying results.
      * @param storage The storage manager (not used in this command).
+     * @return A string containing the search results for display in the JavaFX UI.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Storage storage) {
+        StringBuilder response = new StringBuilder();
+
         if (tasks.getTasks().isEmpty()) {
-            ui.show("Your task list is empty!");
-            return;
+            return "Your task list is empty!";
         }
 
-        ui.show("Here are the matching tasks in your list:");
+        response.append("Here are the matching tasks in your list:\n");
+        int count = 0;
         for (int i = 0; i < tasks.getTasks().size(); i++) {
-            if (tasks.getTasks().get(i).getTaskDescription().contains(keyword)) {
-                ui.show((i + 1) + ". " + tasks.getTasks().get(i));
+            Task task = tasks.getTasks().get(i);
+            if (task.getTaskDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                response.append((++count)).append(". ").append(task).append("\n");
             }
         }
+
+        if (count == 0) {
+            return "No matching tasks found for: " + keyword;
+        }
+
+        return response.toString().trim();
     }
 }

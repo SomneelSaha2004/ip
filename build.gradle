@@ -4,14 +4,23 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'checkstyle'
 }
-checkstyle{
+
+checkstyle {
     toolVersion = '10.2'
 }
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    String javaFxVersion = '17.0.7'
+
+    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'win'
+
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.0'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.0'
 }
@@ -19,12 +28,10 @@ dependencies {
 test {
     useJUnitPlatform()
 
-
     include '**/taskmaster/*'
 
     testLogging {
         events "passed", "skipped", "failed"
-
         showExceptions true
         exceptionFormat "full"
         showCauses true
@@ -34,7 +41,7 @@ test {
 }
 
 application {
-    mainClass.set("taskmaster.TaskMaster")
+    mainClass.set("taskmaster.Launcher")
 }
 
 shadowJar {
@@ -42,11 +49,14 @@ shadowJar {
     archiveClassifier = null
     archiveVersion = null
     manifest {
-        attributes 'Main-Class': 'taskmaster.TaskMaster'
+        attributes 'Main-Class': 'taskmaster.Launcher'
     }
 }
 
-
-run{
+run {
     standardInput = System.in
+    jvmArgs = [
+            '--module-path', "${System.getenv('JAVA_HOME')}/lib",
+            '--add-modules', 'javafx.controls,javafx.fxml'
+    ]
 }

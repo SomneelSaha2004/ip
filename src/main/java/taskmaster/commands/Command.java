@@ -2,7 +2,6 @@ package taskmaster.commands;
 
 import taskmaster.exceptions.TaskMasterException;
 import taskmaster.storage.Storage;
-import taskmaster.ui.Ui;
 import taskmaster.utils.TaskList;
 
 /**
@@ -14,11 +13,11 @@ public abstract class Command {
      * Executes the command.
      *
      * @param tasks   The task list.
-     * @param ui      The user interface.
      * @param storage The storage manager.
+     * @return A response message as a string for display in the UI.
      * @throws TaskMasterException If there is an error during execution.
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws TaskMasterException;
+    public abstract String execute(TaskList tasks, Storage storage) throws TaskMasterException;
 
     /**
      * Indicates whether this command will terminate the application.
