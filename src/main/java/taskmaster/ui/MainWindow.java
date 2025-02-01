@@ -32,7 +32,7 @@ public class MainWindow extends AnchorPane {
     }
 
     /** Injects the Duke instance */
-    public void setDuke(TaskMaster t) {
+    public void setTaskMaster(TaskMaster t) {
         taskmaster = t;
     }
 
@@ -44,9 +44,10 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = taskmaster.getResponse(input);
+        String commandType = taskmaster.getCommandType();
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getTaskMasterDialog(response, dukeImage)
+                DialogBox.getTaskMasterDialog(response, dukeImage, commandType)
         );
         userInput.clear();
     }

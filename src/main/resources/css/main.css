@@ -1,0 +1,66 @@
+/* Main Background */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #f7f9fc, #e3efff); /* Clean, modern gradient */
+    -fx-padding: 10;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-background-image: url("../images/background.png"); /* Set image */
+    -fx-background-size: stretch;
+}
+
+/* Input Text Field */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d9e6;
+    -fx-border-radius: 15; /* Removed px for JavaFX 17.0.1 compatibility */
+    -fx-background-radius: 15;
+    -fx-padding: 8 12;
+    -fx-font-size: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.2, 2, 2);
+}
+
+/* Send Button */
+.button {
+    -fx-background-color: linear-gradient(to bottom right, #007bff, #0056d2);
+    -fx-text-fill: white; /* Ensures text is visible */
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20; /* Adjusted padding */
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 4, 0.3, 2, 2);
+}
+
+/* Send Button Hover Effect */
+.button:hover {
+    -fx-background-color: #0056d2;
+    -fx-cursor: hand;
+    -fx-font-size: 17; /* Slightly increase font size on hover */
+}
+
+/* Send Button Pressed */
+.button:pressed {
+    -fx-background-color: #003e9c;
+    -fx-padding: 8 18; /* Slight shrink effect when pressed */
+}
+
+/* Scroll Pane */
+.scroll-pane,
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #c0d6f9;
+    -fx-background-radius: 5;
+}
+
+/* Hide increment and decrement buttons */
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}

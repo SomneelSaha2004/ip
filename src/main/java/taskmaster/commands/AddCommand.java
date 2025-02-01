@@ -80,4 +80,20 @@ public class AddCommand extends Command {
         tasks.addTask(event);
         return String.format("Got it. I've added this task:\n  %s", event);
     }
+    /**
+     * Returns the type of task to add.
+     *
+     * @return The type of task to add.
+     */
+    public String getTaskType() {
+        return taskType;
+    }
+    /**
+     * Returns the arguments for the task.
+     *
+     * @return The arguments for the task.
+     */
+    public String getArguments() {
+        return arguments;
+    }
 }
