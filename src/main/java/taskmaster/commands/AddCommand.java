@@ -6,7 +6,6 @@ import taskmaster.storage.Storage;
 import taskmaster.tasks.Deadline;
 import taskmaster.tasks.Event;
 import taskmaster.tasks.ToDo;
-import taskmaster.ui.Ui;
 import taskmaster.utils.TaskList;
 
 import java.time.LocalDateTime;
@@ -30,38 +29,29 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws TaskMasterException {
+    public String execute(TaskList tasks, Storage storage) throws TaskMasterException {
         switch (taskType) {
             case "todo":
-                if (arguments.isBlank()) {
-                    throw new TaskMasterException("The description of a todo cannot be empty.");
-                }
-                tasks.addTask(new ToDo(arguments));
-                ui.show("Got it. I've added this task:");
-                ui.show("  " + tasks.getTasks().get(tasks.getTasks().size() - 1));
-                break;
-
+                return handleToDo(tasks);
             case "deadline":
-                handleDeadline(tasks, ui);
-                break;
-
+                return handleDeadline(tasks);
             case "event":
-                handleEvent(tasks, ui);
-                break;
-
+                return handleEvent(tasks);
             default:
                 throw new TaskMasterException("Unknown task type: " + taskType);
         }
     }
 
-    /**
-     * Handles adding a deadline task.
-     *
-     * @param tasks The task list.
-     * @param ui    The user interface.
-     * @throws TaskMasterException If an error occurs while parsing the deadline.
-     */
-    private void handleDeadline(TaskList tasks, Ui ui) throws TaskMasterException {
+    private String handleToDo(TaskList tasks) throws TaskMasterException {
+        if (arguments.isBlank()) {
+            throw new TaskMasterException("The description of a todo cannot be empty.");
+        }
+        ToDo todo = new ToDo(arguments);
+        tasks.addTask(todo);
+        return String.format("Got it. I've added this task:\n  %s", todo);
+    }
+
+    private String handleDeadline(TaskList tasks) throws TaskMasterException {
         String[] parts = arguments.split("/by", 2);
         if (parts.length < 2) {
             throw new TaskMasterException("Please specify the deadline using '/by'.");
@@ -69,19 +59,12 @@ public class AddCommand extends Command {
         String description = parts[0].trim();
         String by = parts[1].trim();
         LocalDateTime byDate = Parser.parseDateTime(by);
-        tasks.addTask(new Deadline(description, byDate));
-        ui.show("Got it. I've added this task:");
-        ui.show("  " + tasks.getTasks().get(tasks.getTasks().size() - 1));
+        Deadline deadline = new Deadline(description, byDate);
+        tasks.addTask(deadline);
+        return String.format("Got it. I've added this task:\n  %s", deadline);
     }
 
-    /**
-     * Handles adding an event task.
-     *
-     * @param tasks The task list.
-     * @param ui    The user interface.
-     * @throws TaskMasterException If an error occurs while parsing the event time.
-     */
-    private void handleEvent(TaskList tasks, Ui ui) throws TaskMasterException {
+    private String handleEvent(TaskList tasks) throws TaskMasterException {
         String[] parts = arguments.split("/from", 2);
         if (parts.length < 2) {
             throw new TaskMasterException("Please specify the event start time using '/from'.");
@@ -93,11 +76,10 @@ public class AddCommand extends Command {
         }
         LocalDateTime from = Parser.parseDateTime(timeParts[0].trim());
         LocalDateTime to = Parser.parseDateTime(timeParts[1].trim());
-        tasks.addTask(new Event(description, from, to));
-        ui.show("Got it. I've added this task:");
-        ui.show("  " + tasks.getTasks().get(tasks.getTasks().size() - 1));
+        Event event = new Event(description, from, to);
+        tasks.addTask(event);
+        return String.format("Got it. I've added this task:\n  %s", event);
     }
-
     /**
      * Returns the type of task to add.
      *
@@ -106,7 +88,6 @@ public class AddCommand extends Command {
     public String getTaskType() {
         return taskType;
     }
-
     /**
      * Returns the arguments for the task.
      *

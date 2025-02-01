@@ -2,65 +2,64 @@ package taskmaster;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import taskmaster.commands.*;
+import taskmaster.commands.Command;
 import taskmaster.exceptions.TaskMasterException;
 import taskmaster.parser.Parser;
 import taskmaster.storage.Storage;
-import taskmaster.ui.Ui;
 import taskmaster.utils.TaskList;
 
 /**
  * Main class for the TaskMaster application.
  */
 public class TaskMaster {
-    private final Ui ui;
     private final Storage storage;
     private final TaskList tasks;
+    private String commandType;
 
     /**
      * Constructs a new TaskMaster application.
      */
     public TaskMaster() {
-        this.ui = new Ui();
         this.storage = new Storage("data/taskmaster.txt");
         TaskList tempTasks;
         try {
             tempTasks = new TaskList(storage.load());
         } catch (IOException e) {
-            ui.showError("Failed to load tasks. Starting with an empty list.");
             tempTasks = new TaskList(new ArrayList<>());
         }
         this.tasks = tempTasks;
     }
 
     /**
-     * Runs the TaskMaster application.
+     * Processes user input and returns the response for JavaFX UI,
+     * while saving any changes to storage.
+     *
+     * @param input The user's input command.
+     * @return The response generated after executing the command.
      */
-    public void run() {
-        ui.showWelcome();
-        boolean isExit = false;
+    public String getResponse(String input) {
+        try {
+            Command command = Parser.parse(input);
+            commandType = command.getClass().getSimpleName();
+            String response = command.execute(tasks, storage);
 
-        while (!isExit) {
-            try {
-                String fullCommand = ui.readCommand();
-                ui.showLine(); // show the divider line ("_______")
-                Command command = Parser.parse(fullCommand);
-                command.execute(tasks, ui, storage);
-                isExit = command.isExit();
-            } catch (TaskMasterException e) {
-                ui.showError(e.getMessage());
-            } finally {
-                ui.showLine();
-            }
+            // Write changes to storage after successful command execution
+            storage.save(tasks.getTasks());
+
+            return response;
+        } catch (TaskMasterException e) {
+            return "Error: " + e.getMessage();
+        } catch (IOException ioException) {
+            return "Error saving tasks: " + ioException.getMessage();
         }
     }
 
     /**
-     * The main entry point for the TaskMaster application.
+     * Returns the last executed command type.
      *
-     * @param args Command-line arguments.
+     * @return The command type.
      */
-    public static void main(String[] args) {
-        new TaskMaster().run();
+    public String getCommandType() {
+        return commandType;
     }
 }

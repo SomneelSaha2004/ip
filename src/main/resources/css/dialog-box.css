@@ -1,0 +1,69 @@
+/* General Label Styling */
+.label {
+    -fx-background-color: linear-gradient(to bottom right, #4a90e2, #007aff); /* Sleek blue gradient */
+    -fx-text-fill: white; /* White text for contrast */
+    -fx-padding: 10 15;  /* Padding for breathing space */
+    -fx-font-size: 14; /* Removed px for JavaFX compatibility */
+    -fx-font-weight: bold;
+
+    -fx-border-color: transparent; /* Removing strong borders for minimal design */
+    -fx-border-width: 1;
+    -fx-background-radius: 12 12 4 12; /* Rounded corners with a "chat bubble" feel */
+    -fx-border-radius: 12 12 4 12;
+
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2); /* Subtle shadow for depth */
+}
+
+/* Reply Labels (Different Bubble Shape) */
+.reply-label {
+    -fx-background-color: linear-gradient(to bottom right, #e0f7fa, #b2ebf2); /* Light cyan gradient for replies */
+    -fx-text-fill: #004d40; /* Darker text color for contrast */
+
+    -fx-padding: 10 15;
+    -fx-font-size: 13;
+    -fx-background-radius: 12 12 12 4; /* Inverted bubble shape */
+    -fx-border-radius: 12 12 12 4;
+
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 3, 0, 0, 1);
+    -fx-border-color: transparent;
+}
+
+/* Profile Picture Styling */
+#displayPicture {
+    -fx-background-radius: 50; /* Ensures the image stays circular */
+    -fx-border-color: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+
+    /* Shadow effect for depth */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.3, 2, 4);
+
+    /* Consistent Image Scaling */
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+
+    /* Subtle Rotation for Fun UI Dynamics */
+    -fx-rotate: 0; /* You can try 2 or 5 for a playful tilt */
+}
+
+/* Hover Effect on Profile Picture */
+#displayPicture:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 12, 0.5, 3, 5);
+    -fx-cursor: hand; /* Changes cursor to pointer for better UX */
+}
+
+/* Paste this below reply-label */
+.add-label {
+    -fx-background-color: black;
+}
+
+.marked-label {
+    -fx-background-color: palegreen;
+}
+
+.delete-label {
+    -fx-background-color: lightpink;
+}
+

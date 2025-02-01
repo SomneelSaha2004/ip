@@ -2,7 +2,6 @@ package taskmaster.commands;
 
 import taskmaster.storage.Storage;
 import taskmaster.utils.TaskList;
-import taskmaster.ui.Ui;
 import taskmaster.tasks.Task;
 import taskmaster.exceptions.TaskMasterException;
 
@@ -25,19 +24,26 @@ public class UnmarkCommand extends Command {
      * Executes the command to mark a task as not done.
      *
      * @param tasks   The task list containing tasks.
-     * @param ui      The user interface for displaying messages.
-     * @param storage The storage manager (not used in this command).
-     * @throws TaskMasterException If the index is out of range.
+     * @param storage The storage manager (used to save the updated task list).
+     * @return A string message to display in the JavaFX UI.
+     * @throws TaskMasterException If the index is out of range or saving fails.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws TaskMasterException {
+    public String execute(TaskList tasks, Storage storage) throws TaskMasterException {
         if (index <= 0 || index > tasks.getTasks().size()) {
             throw new TaskMasterException("Task index out of range.");
         }
+
         Task task = tasks.getTasks().get(index - 1);
         task.markAsNotDone();
-        ui.show("Ok, I've marked this task as not done yet:");
-        ui.show("  " + task);
+
+        try {
+            storage.save(tasks.getTasks());
+        } catch (Exception e) {
+            throw new TaskMasterException("Failed to save task after unmarking.");
+        }
+
+        return "Ok, I've marked this task as not done yet:\n  " + task;
     }
 
     /**

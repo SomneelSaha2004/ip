@@ -5,7 +5,6 @@ import java.util.List;
 
 import taskmaster.storage.Storage;
 import taskmaster.tasks.Task;
-import taskmaster.ui.Ui;
 import taskmaster.utils.TaskList;
 
 /**
@@ -27,19 +26,22 @@ public class AgendaCommand extends Command {
      * Executes the command to list tasks due on a specific date.
      *
      * @param tasks   The task list.
-     * @param ui      The user interface.
      * @param storage The storage manager.
+     * @return A response message containing the tasks due on the specified date.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Storage storage) {
         List<Task> dueTasks = tasks.getTasksDueOn(date);
+        StringBuilder response = new StringBuilder();
+
         if (dueTasks.isEmpty()) {
-            ui.show("No tasks due on " + date + ".");
+            response.append("No tasks due on ").append(date).append(".");
         } else {
-            ui.show("Here are the tasks due on " + date + ":");
-            for (Task task : dueTasks) {
-                ui.show("  " + task);
+            response.append("Here are the tasks due on ").append(date).append(":\n");
+            for (int i = 0; i < dueTasks.size(); i++) {
+                response.append(i + 1).append(". ").append(dueTasks.get(i)).append("\n");
             }
         }
+        return response.toString().trim();
     }
 }
