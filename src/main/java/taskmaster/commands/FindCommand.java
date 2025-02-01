@@ -5,22 +5,22 @@ import taskmaster.utils.TaskList;
 import taskmaster.tasks.Task;
 
 /**
- * Command to find tasks containing a given keyword.
+ * Command to find tasks containing any of the given keywords.
  */
 public class FindCommand extends Command {
-    private final String keyword;
+    private final String[] keywords;
 
     /**
      * Constructs a FindCommand.
      *
-     * @param keyword The keyword to search for in task descriptions.
+     * @param keywords The keywords to search for in task descriptions.
      */
-    public FindCommand(String keyword) {
-        this.keyword = keyword;
+    public FindCommand(String... keywords) {
+        this.keywords = keywords;
     }
 
     /**
-     * Executes the find command to search for tasks matching the keyword.
+     * Executes the find command to search for tasks matching any of the keywords.
      *
      * @param tasks   The task list to search.
      * @param storage The storage manager (not used in this command).
@@ -36,15 +36,22 @@ public class FindCommand extends Command {
 
         response.append("Here are the matching tasks in your list:\n");
         int count = 0;
+
         for (int i = 0; i < tasks.getTasks().size(); i++) {
             Task task = tasks.getTasks().get(i);
-            if (task.getTaskDescription().toLowerCase().contains(keyword.toLowerCase())) {
-                response.append((++count)).append(". ").append(task).append("\n");
+            String taskDescription = task.getTaskDescription().toLowerCase();
+
+
+            for (String keyword : keywords) {
+                if (taskDescription.contains(keyword.toLowerCase())) {
+                    response.append((++count)).append(". ").append(task).append("\n");
+                    break;
+                }
             }
         }
 
         if (count == 0) {
-            return "No matching tasks found for: " + keyword;
+            return "No matching tasks found for keywords: " + String.join(", ", keywords);
         }
 
         return response.toString().trim();
