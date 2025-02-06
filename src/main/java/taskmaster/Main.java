@@ -21,6 +21,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             Image icon = new Image(Main.class.getResourceAsStream("/images/icon.png"));
+            stage.setTitle("TaskMaster");
             stage.setScene(scene);
             stage.setMinHeight(220);
             stage.setMinWidth(417);

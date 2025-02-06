@@ -3,8 +3,12 @@ package taskmaster.storage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import taskmaster.exceptions.TaskMasterException;
 import taskmaster.parser.Parser;
@@ -32,7 +36,6 @@ public class Storage {
      * @throws IOException If there is an error reading the file.
      */
     public ArrayList<Task> load() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
 
         if (!file.exists()) {
@@ -45,31 +48,32 @@ public class Storage {
             }
         }
 
-        try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                try {
-                    tasks.add(Parser.parseTask(line));
-                } catch (TaskMasterException e) {
-                    System.out.println("Skipping invalid task in file: " + line);
-                }
-            }
+        try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+            return lines
+                    .map(line -> {
+                        try {
+                            return Parser.parseTask(line);
+                        } catch (TaskMasterException e) {
+                            System.err.println("Skipping invalid task in file: " + line);
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull) // Remove invalid tasks
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
+}
 
-        return tasks;
-    }
-
-    /**
-     * Saves the given list of tasks to the file.
-     *
-     * @param tasks The list of tasks to save.
-     * @throws IOException If there is an error writing to the file.
-     */
-    public void save(ArrayList<Task> tasks) throws IOException {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            for (Task task : tasks) {
-                writer.write(task.save() + "\n");
-            }
+/**
+ * Saves the given list of tasks to the file.
+ *
+ * @param tasks The list of tasks to save.
+ * @throws IOException If there is an error writing to the file.
+ */
+public void save(ArrayList<Task> tasks) throws IOException {
+    try (FileWriter writer = new FileWriter(filePath)) {
+        for (Task task : tasks) {
+            writer.write(task.save() + "\n");
         }
     }
+}
 }
