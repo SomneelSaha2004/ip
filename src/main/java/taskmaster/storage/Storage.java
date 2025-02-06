@@ -55,7 +55,7 @@ public class Storage {
                 }
             }
         }
-
+        assert tasks != null : "Storage load should always return a valid task list.";
         return tasks;
     }
 

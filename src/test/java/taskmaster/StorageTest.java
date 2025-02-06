@@ -1,14 +1,8 @@
 package taskmaster;
 
-
-
-import taskmaster.tasks.Task;
-import taskmaster.tasks.ToDo;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import taskmaster.storage.Storage;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,30 +10,47 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import taskmaster.storage.Storage;
+import taskmaster.tasks.Task;
+import taskmaster.tasks.ToDo;
 
 /**
- * Unit tests for the storage class.
+ * Unit tests for the Storage class.
  */
 public class StorageTest {
+
     private Path tempFile;
     private Storage storage;
 
+    /**
+     * Sets up a temporary file before each test.
+     *
+     * @throws IOException If an error occurs while creating the file.
+     */
     @BeforeEach
     public void setUp() throws IOException {
-        // Create a temporary file for testing
         tempFile = Files.createTempFile("taskmaster", ".txt");
         storage = new Storage(tempFile.toString());
     }
 
+    /**
+     * Cleans up the temporary file after each test.
+     *
+     * @throws IOException If an error occurs while deleting the file.
+     */
     @AfterEach
     public void tearDown() throws IOException {
-        // Delete the temporary file
         Files.deleteIfExists(tempFile);
     }
 
     /**
      * Tests the load method when the file is empty.
+     *
+     * @throws IOException If an error occurs while loading the file.
      */
     @Test
     public void testLoadEmptyFile() throws IOException {
@@ -49,6 +60,8 @@ public class StorageTest {
 
     /**
      * Tests the save method by saving tasks to the file and verifying the contents.
+     *
+     * @throws IOException If an error occurs while saving the file.
      */
     @Test
     public void testSave() throws IOException {
@@ -66,6 +79,8 @@ public class StorageTest {
 
     /**
      * Tests the load method by saving tasks to the file and loading them back.
+     *
+     * @throws IOException If an error occurs while loading the file.
      */
     @Test
     public void testLoad() throws IOException {
@@ -82,6 +97,4 @@ public class StorageTest {
         assertEquals("Complete assignment", tasks.get(1).getTaskDescription());
         assertTrue(tasks.get(1).isCompleted());
     }
-
-
 }

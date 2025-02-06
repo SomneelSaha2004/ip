@@ -93,7 +93,7 @@ public class Parser {
             try {
                 return LocalDateTime.parse(dateTimeString, formatter);
             } catch (DateTimeParseException ignored) {
-                // Try the next format
+                continue;
             }
         }
         throw new TaskMasterException(
