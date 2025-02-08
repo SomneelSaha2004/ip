@@ -3,8 +3,10 @@ package taskmaster.storage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.stream.Stream;
 
 import taskmaster.exceptions.TaskMasterException;
 import taskmaster.parser.Parser;
@@ -45,16 +47,18 @@ public class Storage {
             }
         }
 
-        try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
+        try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+            lines.forEach(line -> {
                 try {
                     tasks.add(Parser.parseTask(line));
                 } catch (TaskMasterException e) {
-                    System.out.println("Skipping invalid task in file: " + line);
+                    System.err.println("Skipping invalid task in file: " + line);
                 }
-            }
+            });
+        } catch (IOException e) {
+            throw new IOException("Error reading from file: " + filePath, e);
         }
+
 
         return tasks;
     }
