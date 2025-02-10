@@ -157,7 +157,7 @@ public class Parser {
         try {
             return parseDateTime(arguments.trim());
         } catch (TaskMasterException e) {
-            throw new TaskMasterException("Invalid date provided for agenda command. " + e.getMessage());
+            throw new TaskMasterException("Invalid date provided for agenda command.\n" + e.getMessage());
         }
     }
 }

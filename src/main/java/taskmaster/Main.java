@@ -23,7 +23,6 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             Image icon = new Image(Main.class.getResourceAsStream("/images/icon.png"));
-
             stage.setScene(scene);
             stage.setTitle("TaskMaster - Your Personal Task Manager");
 
