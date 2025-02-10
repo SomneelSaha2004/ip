@@ -20,7 +20,8 @@ public class TaskMaster {
      * Constructs a new TaskMaster application.
      */
     public TaskMaster() {
-        this.storage = new Storage("data/taskmaster.txt");
+        String filePath = System.getenv().getOrDefault("TASKMASTER_STORAGE", "data/taskmaster.txt");
+        this.storage = new Storage(filePath);
         TaskList tempTasks;
         try {
             tempTasks = new TaskList(storage.load());
