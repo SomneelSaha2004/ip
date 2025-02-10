@@ -18,6 +18,7 @@ public class FindCommand extends Command {
      * @param keywords The keywords to search for in task descriptions.
      */
     public FindCommand(String... keywords) {
+        assert keywords.length > 0 : "FindCommand should have at least one keyword.";
         this.keywords = keywords;
     }
 

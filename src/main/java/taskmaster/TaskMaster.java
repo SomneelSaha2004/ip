@@ -42,6 +42,7 @@ public class TaskMaster {
     public String getResponse(String input) {
         try {
             Command command = Parser.parse(input);
+            assert command != null : "Parser should never return a null command.";
             commandType = command.getClass().getSimpleName();
             String response = command.execute(tasks, storage);
 

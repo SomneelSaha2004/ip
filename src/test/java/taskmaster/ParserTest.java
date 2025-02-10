@@ -1,24 +1,35 @@
 package taskmaster;
 
-import taskmaster.commands.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
+
+import taskmaster.commands.AddCommand;
+import taskmaster.commands.Command;
+import taskmaster.commands.ExitCommand;
+import taskmaster.commands.ListCommand;
 import taskmaster.exceptions.TaskMasterException;
+import taskmaster.parser.Parser;
 import taskmaster.tasks.Deadline;
 import taskmaster.tasks.Event;
 import taskmaster.tasks.Task;
 import taskmaster.tasks.ToDo;
-import org.junit.jupiter.api.Test;
-import taskmaster.parser.Parser;
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the parser class.
+ * Unit tests for the Parser class.
  */
 public class ParserTest {
 
     /**
      * Tests parsing a valid "bye" command.
+     *
+     * @throws TaskMasterException If parsing fails unexpectedly.
      */
     @Test
     public void testParseByeCommand() throws TaskMasterException {
@@ -28,6 +39,8 @@ public class ParserTest {
 
     /**
      * Tests parsing a valid "list" command.
+     *
+     * @throws TaskMasterException If parsing fails unexpectedly.
      */
     @Test
     public void testParseListCommand() throws TaskMasterException {
@@ -37,6 +50,8 @@ public class ParserTest {
 
     /**
      * Tests parsing a valid "todo" command.
+     *
+     * @throws TaskMasterException If parsing fails unexpectedly.
      */
     @Test
     public void testParseToDoCommand() throws TaskMasterException {
@@ -49,6 +64,8 @@ public class ParserTest {
 
     /**
      * Tests parsing a valid "deadline" command.
+     *
+     * @throws TaskMasterException If parsing fails unexpectedly.
      */
     @Test
     public void testParseDeadlineCommand() throws TaskMasterException {
@@ -61,6 +78,8 @@ public class ParserTest {
 
     /**
      * Tests parsing a valid "event" command.
+     *
+     * @throws TaskMasterException If parsing fails unexpectedly.
      */
     @Test
     public void testParseEventCommand() throws TaskMasterException {
@@ -81,6 +100,8 @@ public class ParserTest {
 
     /**
      * Tests parsing a valid task line for a ToDo task.
+     *
+     * @throws TaskMasterException If parsing fails unexpectedly.
      */
     @Test
     public void testParseTaskToDo() throws TaskMasterException {
@@ -92,6 +113,8 @@ public class ParserTest {
 
     /**
      * Tests parsing a valid task line for a Deadline task.
+     *
+     * @throws TaskMasterException If parsing fails unexpectedly.
      */
     @Test
     public void testParseTaskDeadline() throws TaskMasterException {
@@ -103,6 +126,8 @@ public class ParserTest {
 
     /**
      * Tests parsing a valid task line for an Event task.
+     *
+     * @throws TaskMasterException If parsing fails unexpectedly.
      */
     @Test
     public void testParseTaskEvent() throws TaskMasterException {
@@ -114,6 +139,8 @@ public class ParserTest {
 
     /**
      * Tests parsing a valid date-time string.
+     *
+     * @throws TaskMasterException If parsing fails unexpectedly.
      */
     @Test
     public void testParseValidDateTime() throws TaskMasterException {

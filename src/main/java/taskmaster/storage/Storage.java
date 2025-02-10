@@ -61,18 +61,21 @@ public class Storage {
                     .filter(Objects::nonNull) // Remove invalid tasks
                     .collect(Collectors.toCollection(ArrayList::new));
         }
-}
+        assert tasks != null : "Storage load should always return a valid task list.";
+        return tasks;
+    }
 
-/**
- * Saves the given list of tasks to the file.
- *
- * @param tasks The list of tasks to save.
- * @throws IOException If there is an error writing to the file.
- */
-public void save(ArrayList<Task> tasks) throws IOException {
-    try (FileWriter writer = new FileWriter(filePath)) {
-        for (Task task : tasks) {
-            writer.write(task.save() + "\n");
+    /**
+     * Saves the given list of tasks to the file.
+     *
+     * @param tasks The list of tasks to save.
+     * @throws IOException If there is an error writing to the file.
+     */
+    public void save(ArrayList<Task> tasks) throws IOException {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            for (Task task : tasks) {
+                writer.write(task.save() + "\n");
+            }
         }
     }
 }

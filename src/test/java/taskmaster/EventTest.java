@@ -1,31 +1,34 @@
 package taskmaster;
-import taskmaster.tasks.Event;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import taskmaster.tasks.Event;
 
 /**
  * Unit tests for the Event class.
  */
 public class EventTest {
 
+    private static final LocalDateTime TEST_START = LocalDateTime.of(2025, 1, 31, 10, 0);
+    private static final LocalDateTime TEST_END = LocalDateTime.of(2025, 1, 31, 12, 0);
+    private static final LocalDate CHECK_DATE = LocalDate.of(2025, 1, 31);
+
     /**
      * Tests the constructor that initializes an Event task as not done.
      */
     @Test
     public void testConstructorWithoutIsDone() {
-        LocalDateTime start = LocalDateTime.of(2025, 1, 31, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2025, 1, 31, 12, 0);
-        Event event = new Event("Team meeting", start, end);
+        Event event = new Event("Team meeting", TEST_START, TEST_END);
 
         assertEquals("Team meeting", event.getTaskDescription());
         assertFalse(event.isCompleted());
-        assertTrue(event.getTo().isEqual(end));
-
+        assertTrue(event.getTo().isEqual(TEST_END));
     }
 
     /**
@@ -33,13 +36,11 @@ public class EventTest {
      */
     @Test
     public void testConstructorWithIsDone() {
-        LocalDateTime start = LocalDateTime.of(2025, 1, 31, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2025, 1, 31, 12, 0);
-        Event event = new Event("Project presentation", true, start, end);
+        Event event = new Event("Project presentation", true, TEST_START, TEST_END);
 
         assertEquals("Project presentation", event.getTaskDescription());
         assertTrue(event.isCompleted());
-        assertTrue(event.isDue(start.toLocalDate()));
+        assertTrue(event.isDue(TEST_START.toLocalDate()));
     }
 
     /**
@@ -47,9 +48,7 @@ public class EventTest {
      */
     @Test
     public void testToString() {
-        LocalDateTime start = LocalDateTime.of(2025, 1, 31, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2025, 1, 31, 12, 0);
-        Event event = new Event("Workshop", false, start, end);
+        Event event = new Event("Workshop", false, TEST_START, TEST_END);
 
         assertEquals("[E][ ] Workshop (from: 2025-01-31T10:00 to: 2025-01-31T12:00)", event.toString());
 
@@ -62,9 +61,7 @@ public class EventTest {
      */
     @Test
     public void testSave() {
-        LocalDateTime start = LocalDateTime.of(2025, 1, 31, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2025, 1, 31, 12, 0);
-        Event event = new Event("Team-building activity", false, start, end);
+        Event event = new Event("Team-building activity", false, TEST_START, TEST_END);
 
         assertEquals("E,0,Team-building activity,2025-01-31T10:00,2025-01-31T12:00", event.save());
 
@@ -77,14 +74,11 @@ public class EventTest {
      */
     @Test
     public void testIsDue() {
-        LocalDateTime start = LocalDateTime.of(2025, 1, 31, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2025, 1, 31, 12, 0);
-        Event event = new Event("Client demo", false, start, end);
+        Event event = new Event("Client demo", false, TEST_START, TEST_END);
 
-        LocalDate checkDate = LocalDate.of(2025, 1, 31);
-        assertTrue(event.isDue(checkDate));
+        assertTrue(event.isDue(CHECK_DATE));
 
-        checkDate = LocalDate.of(2025, 2, 1);
-        assertFalse(event.isDue(checkDate));
+        LocalDate futureDate = LocalDate.of(2025, 2, 1);
+        assertFalse(event.isDue(futureDate));
     }
 }
