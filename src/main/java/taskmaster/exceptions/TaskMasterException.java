@@ -15,6 +15,6 @@ public class TaskMasterException extends Exception {
      *                This message is prepended with "TaskMasterException:" for clarity.
      */
     public TaskMasterException(String message) {
-        super("TaskMasterException:" + message);
+        super(message);
     }
 }

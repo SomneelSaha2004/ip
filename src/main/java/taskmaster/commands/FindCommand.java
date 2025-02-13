@@ -1,5 +1,7 @@
 package taskmaster.commands;
 
+import java.util.Arrays;
+
 import taskmaster.storage.Storage;
 import taskmaster.utils.TaskList;
 import taskmaster.tasks.Task;
@@ -16,6 +18,7 @@ public class FindCommand extends Command {
      * @param keywords The keywords to search for in task descriptions.
      */
     public FindCommand(String... keywords) {
+        assert keywords.length > 0 : "FindCommand should have at least one keyword.";
         this.keywords = keywords;
     }
 
@@ -39,15 +42,12 @@ public class FindCommand extends Command {
 
         for (int i = 0; i < tasks.getTasks().size(); i++) {
             Task task = tasks.getTasks().get(i);
-            String taskDescription = task.getTaskDescription().toLowerCase();
+                boolean matches = Arrays.stream(keywords)
+                        .allMatch(key -> task.getTaskDescription().toLowerCase().contains(key.toLowerCase()));
 
-
-            for (String keyword : keywords) {
-                if (taskDescription.contains(keyword.toLowerCase())) {
+                if (matches) {
                     response.append((++count)).append(". ").append(task).append("\n");
-                    break;
                 }
-            }
         }
 
         if (count == 0) {

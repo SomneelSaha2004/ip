@@ -1,6 +1,8 @@
 package taskmaster;
 
 import java.io.IOException;
+
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +25,6 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             Image icon = new Image(Main.class.getResourceAsStream("/images/icon.png"));
-
             stage.setScene(scene);
             stage.setTitle("TaskMaster - Your Personal Task Manager");
 
@@ -42,7 +43,11 @@ public class Main extends Application {
             stage.getIcons().add(icon);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to load the application");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
     }
 

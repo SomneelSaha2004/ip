@@ -20,10 +20,12 @@ public class TaskMaster {
      * Constructs a new TaskMaster application.
      */
     public TaskMaster() {
-        this.storage = new Storage("data/taskmaster.txt");
+        String filePath = System.getenv().getOrDefault("TASKMASTER_STORAGE", "data/taskmaster.txt");
+        this.storage = new Storage(filePath);
         TaskList tempTasks;
         try {
             tempTasks = new TaskList(storage.load());
+            System.out.println(tempTasks);
         } catch (IOException e) {
             tempTasks = new TaskList(new ArrayList<>());
         }
@@ -40,6 +42,7 @@ public class TaskMaster {
     public String getResponse(String input) {
         try {
             Command command = Parser.parse(input);
+            assert command != null : "Parser should never return a null command.";
             commandType = command.getClass().getSimpleName();
             String response = command.execute(tasks, storage);
 
