@@ -3,15 +3,15 @@
     -fx-background-color: linear-gradient(to bottom, #f7f9fc, #e3efff); /* Clean, modern gradient */
     -fx-padding: 10;
     -fx-font-family: "Segoe UI", "Arial", sans-serif;
-    -fx-background-image: url("../images/background.png"); /* Set image */
-    -fx-background-size: stretch;
+    -fx-background-image: url("../images/background.png"); /* Background image */
+    -fx-background-size: cover; /* Ensure it fills the whole background */
 }
 
 /* Input Text Field */
 .text-field {
     -fx-background-color: #ffffff;
     -fx-border-color: #d1d9e6;
-    -fx-border-radius: 15; /* Removed px for JavaFX 17.0.1 compatibility */
+    -fx-border-radius: 15;
     -fx-background-radius: 15;
     -fx-padding: 8 12;
     -fx-font-size: 16;
@@ -21,10 +21,10 @@
 /* Send Button */
 .button {
     -fx-background-color: linear-gradient(to bottom right, #007bff, #0056d2);
-    -fx-text-fill: white; /* Ensures text is visible */
+    -fx-text-fill: white;
     -fx-font-size: 16;
     -fx-font-weight: bold;
-    -fx-padding: 8 20; /* Adjusted padding */
+    -fx-padding: 8 20;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 4, 0.3, 2, 2);
@@ -34,13 +34,13 @@
 .button:hover {
     -fx-background-color: #0056d2;
     -fx-cursor: hand;
-    -fx-font-size: 17; /* Slightly increase font size on hover */
+    -fx-font-size: 17;
 }
 
 /* Send Button Pressed */
 .button:pressed {
     -fx-background-color: #003e9c;
-    -fx-padding: 8 18; /* Slight shrink effect when pressed */
+    -fx-padding: 8 18;
 }
 
 /* Scroll Pane */
@@ -63,4 +63,72 @@
 .scroll-bar .decrement-button {
     -fx-pref-height: 0;
     -fx-opacity: 0;
+}
+
+/* General Label Styling */
+.label {
+    -fx-background-color: linear-gradient(to bottom right, #4a90e2, #007aff);
+    -fx-text-fill: white;
+    -fx-padding: 10 15;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-background-radius: 12 12 4 12;
+    -fx-border-radius: 12 12 4 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+}
+
+/* Reply Labels (Different Bubble Shape) */
+.reply-label {
+    -fx-background-color: linear-gradient(to bottom right, #e0f7fa, #b2ebf2);
+    -fx-text-fill: #004d40;
+    -fx-padding: 10 15;
+    -fx-font-size: 13;
+    -fx-background-radius: 12 12 12 4;
+    -fx-border-radius: 12 12 12 4;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 3, 0, 0, 1);
+    -fx-border-color: transparent;
+}
+
+/* Profile Picture Styling */
+#displayPicture {
+    -fx-background-radius: 50;
+    -fx-border-color: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.3, 2, 4);
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-rotate: 0;
+}
+
+/* Hover Effect on Profile Picture */
+#displayPicture:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 12, 0.5, 3, 5);
+    -fx-cursor: hand;
+}
+
+/* Action Labels */
+.add-label {
+    -fx-background-color: #5cb85c; /* Green for added tasks */
+    -fx-text-fill: white;
+    -fx-padding: 8 12;
+    -fx-background-radius: 10;
+}
+
+.marked-label {
+    -fx-background-color: #f0ad4e; /* Orange for marked tasks */
+    -fx-text-fill: white;
+    -fx-padding: 8 12;
+    -fx-background-radius: 10;
+}
+
+.delete-label {
+    -fx-background-color: #d9534f; /* Red for deleted tasks */
+    -fx-text-fill: white;
+    -fx-padding: 8 12;
+    -fx-background-radius: 10;
 }

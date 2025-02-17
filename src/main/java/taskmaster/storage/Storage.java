@@ -61,8 +61,6 @@ public class Storage {
                     .filter(Objects::nonNull) // Remove invalid tasks
                     .collect(Collectors.toCollection(ArrayList::new));
         }
-        assert tasks != null : "Storage load should always return a valid task list.";
-        return tasks;
     }
 
     /**
@@ -79,4 +77,4 @@ public class Storage {
         }
     }
 }
-}
+
