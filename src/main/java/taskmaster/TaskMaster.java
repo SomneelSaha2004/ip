@@ -48,7 +48,9 @@ public class TaskMaster {
 
             // Write changes to storage after successful command execution
             storage.save(tasks.getTasks());
-
+            if(command.isExit()){
+                System.exit(0);
+            }
             return "My glorious king\n"+response;
         } catch (TaskMasterException e) {
             return "Error: " + e.getMessage();

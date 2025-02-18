@@ -30,7 +30,7 @@ public class AddCommand extends Command {
 
     @Override
     public String execute(TaskList tasks, Storage storage) throws TaskMasterException {
-        switch (taskType) {
+        switch (taskType.toLowerCase()) {
             case "todo":
                 return handleToDo(tasks);
             case "deadline":
@@ -38,61 +38,81 @@ public class AddCommand extends Command {
             case "event":
                 return handleEvent(tasks);
             default:
-                throw new TaskMasterException("Unknown task type: " + taskType);
+                throw new TaskMasterException(
+                        String.format("Unknown task type: %s. Valid types: todo, deadline, event.", taskType)
+                );
         }
     }
 
+    /**
+     * Handles adding a ToDo task.
+     */
     private String handleToDo(TaskList tasks) throws TaskMasterException {
         if (arguments.isBlank()) {
-            throw new TaskMasterException("The description of a todo cannot be empty.");
+            throw new TaskMasterException("❌ Error: The description of a todo cannot be empty.\n" +
+                    "Usage: todo <task description>");
         }
         ToDo todo = new ToDo(arguments);
         tasks.addTask(todo);
-        return String.format("Got it. I've added this task:\n  %s", todo);
+        return formatTaskResponse(todo);
     }
 
-    private String handleDeadline(TaskList tasks) throws TaskMasterException {
-        String[] parts = arguments.split("/by", 2);
-        if (parts.length < 2) {
-            throw new TaskMasterException("Please specify the deadline using '/by'.");
-        }
-        String description = parts[0].trim();
-        String by = parts[1].trim();
-        LocalDateTime byDate = Parser.parseDateTime(by);
-        Deadline deadline = new Deadline(description, byDate);
-        tasks.addTask(deadline);
-        return String.format("Got it. I've added this task:\n  %s", deadline);
-    }
-
-    private String handleEvent(TaskList tasks) throws TaskMasterException {
-        String[] parts = arguments.split("/from", 2);
-        if (parts.length < 2) {
-            throw new TaskMasterException("Please specify the event start time using '/from'.");
-        }
-        String description = parts[0].trim();
-        String[] timeParts = parts[1].split("/to", 2);
-        if (timeParts.length < 2) {
-            throw new TaskMasterException("Please specify the event end time using '/to'.");
-        }
-        LocalDateTime from = Parser.parseDateTime(timeParts[0].trim());
-        LocalDateTime to = Parser.parseDateTime(timeParts[1].trim());
-        Event event = new Event(description, from, to);
-        tasks.addTask(event);
-        return String.format("Got it. I've added this task:\n  %s", event);
-    }
     /**
-     * Returns the type of task to add.
-     *
-     * @return The type of task to add.
+     * Handles adding a Deadline task.
      */
+    private String handleDeadline(TaskList tasks) throws TaskMasterException {
+        String[] parts = splitInput(arguments, "/by", "deadline <task> /by <deadline>");
+        LocalDateTime byDate = Parser.parseDateTime(parts[1]);
+        Deadline deadline = new Deadline(parts[0], byDate);
+        tasks.addTask(deadline);
+        return formatTaskResponse(deadline);
+    }
+
+    /**
+     * Handles adding an Event task.
+     */
+    private String handleEvent(TaskList tasks) throws TaskMasterException {
+        String[] parts = splitInput(arguments, "/from", "event <task> /from <start> /to <end>");
+        String[] timeParts = splitInput(parts[1], "/to", "event <task> /from <start> /to <end>");
+        LocalDateTime from = Parser.parseDateTime(timeParts[0]);
+        LocalDateTime to = Parser.parseDateTime(timeParts[1]);
+
+        Event event = new Event(parts[0], from, to);
+        tasks.addTask(event);
+        return formatTaskResponse(event);
+    }
+
+    /**
+     * Extracts the command arguments based on a delimiter.
+     *
+     * @param input The raw input string.
+     * @param delimiter The delimiter used to split the input.
+     * @param errorMessage The error message if the format is incorrect.
+     * @return A string array with the split values.
+     * @throws TaskMasterException if the format is invalid.
+     */
+    private String[] splitInput(String input, String delimiter, String errorMessage) throws TaskMasterException {
+        String[] parts = input.split(delimiter, 2);
+        if (parts.length < 2) {
+            throw new TaskMasterException("❌ Error: Invalid format.\nUsage: " + errorMessage);
+        }
+        return new String[]{parts[0].trim(), parts[1].trim()};
+    }
+
+    /**
+     * Formats a task addition response.
+     *
+     * @param task The task added.
+     * @return The formatted response string.
+     */
+    private String formatTaskResponse(Object task) {
+        return String.format("✅ Task added successfully:\n  %s", task);
+    }
+
     public String getTaskType() {
         return taskType;
     }
-    /**
-     * Returns the arguments for the task.
-     *
-     * @return The arguments for the task.
-     */
+
     public String getArguments() {
         return arguments;
     }

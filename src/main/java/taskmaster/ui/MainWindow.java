@@ -34,10 +34,6 @@ public class MainWindow extends AnchorPane {
     /** Injects the Duke instance */
     public void setTaskMaster(TaskMaster t) {
         taskmaster = t;
-        //t.getResponse("list");
-        dialogContainer.getChildren().addAll(
-                DialogBox.getTaskMasterDialog(taskmaster.getResponse("list"), dukeImage, "list")
-        );
     }
 
     /**

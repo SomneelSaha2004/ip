@@ -42,12 +42,12 @@ public class FindCommand extends Command {
 
         for (int i = 0; i < tasks.getTasks().size(); i++) {
             Task task = tasks.getTasks().get(i);
-                boolean matches = Arrays.stream(keywords)
-                        .allMatch(key -> task.getTaskDescription().toLowerCase().contains(key.toLowerCase()));
+            boolean matches = Arrays.stream(keywords)
+                    .allMatch(key -> task.getTaskDescription().toLowerCase().contains(key.toLowerCase()));
 
-                if (matches) {
-                    response.append((++count)).append(". ").append(task).append("\n");
-                }
+            if (matches) {
+                response.append((++count)).append(". ").append(task).append("\n");
+            }
         }
 
         if (count == 0) {

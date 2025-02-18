@@ -4,6 +4,7 @@ import taskmaster.storage.Storage;
 import taskmaster.utils.TaskList;
 import taskmaster.tasks.Task;
 import taskmaster.exceptions.TaskMasterException;
+import java.io.IOException;
 
 /**
  * Command to mark a task as not done.
@@ -17,6 +18,7 @@ public class UnmarkCommand extends Command {
      * @param index The index of the task to mark as not done.
      */
     public UnmarkCommand(int index) {
+        assert index > 0 : "Task index must be positive.";
         this.index = index;
     }
 
@@ -30,20 +32,31 @@ public class UnmarkCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks, Storage storage) throws TaskMasterException {
-        if (index <= 0 || index > tasks.getTasks().size()) {
-            throw new TaskMasterException("Task index out of range.");
-        }
+        Task task = getTaskAtIndex(tasks);
 
-        Task task = tasks.getTasks().get(index - 1);
         task.markAsNotDone();
 
         try {
             storage.save(tasks.getTasks());
-        } catch (Exception e) {
-            throw new TaskMasterException("Failed to save task after unmarking.");
+        } catch (IOException e) {
+            throw new TaskMasterException("Error saving task after unmarking: " + task.getTaskDescription());
         }
 
-        return "Ok, I've marked this task as not done yet:\n  " + task;
+        return "🔄 Ok! I've marked this task as not done:\n  " + task;
+    }
+
+    /**
+     * Retrieves the task at the specified index.
+     *
+     * @param tasks The task list containing tasks.
+     * @return The task at the given index.
+     * @throws TaskMasterException If the index is out of range.
+     */
+    private Task getTaskAtIndex(TaskList tasks) throws TaskMasterException {
+        if (index <= 0 || index > tasks.getTasks().size()) {
+            throw new TaskMasterException("❌ Task index out of range. Please provide a valid index.");
+        }
+        return tasks.getTasks().get(index - 1);
     }
 
     /**

@@ -1,27 +1,16 @@
 package taskmaster.parser;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import taskmaster.commands.AddCommand;
-import taskmaster.commands.AgendaCommand;
-import taskmaster.commands.Command;
-import taskmaster.commands.DeleteCommand;
-import taskmaster.commands.ExitCommand;
-import taskmaster.commands.FindCommand;
-import taskmaster.commands.HelpCommand;
-import taskmaster.commands.ListCommand;
-import taskmaster.commands.MarkCommand;
-import taskmaster.commands.UnmarkCommand;
-
+import taskmaster.commands.*;
 import taskmaster.exceptions.TaskMasterException;
-import taskmaster.tasks.Deadline;
-import taskmaster.tasks.Event;
-import taskmaster.tasks.Task;
-import taskmaster.tasks.ToDo;
+import taskmaster.tasks.*;
 
 /**
  * Parses user commands and tasks from input.
@@ -41,9 +30,11 @@ public class Parser {
      * @throws TaskMasterException If the command is invalid.
      */
     public static Command parse(String fullCommand) throws TaskMasterException {
+        assert fullCommand != null && !fullCommand.isBlank() : "Command cannot be null or empty.";
+
         String[] parts = fullCommand.split(" ", 2);
         String commandWord = parts[0].trim();
-        String arguments = parts.length > 1 ? parts[1].trim() : "";
+        String arguments = (parts.length > 1) ? parts[1].trim() : "";
 
         switch (commandWord) {
             case "bye":
@@ -51,33 +42,23 @@ public class Parser {
             case "list":
                 return new ListCommand();
             case "todo":
-                return new AddCommand("todo", arguments);
             case "deadline":
-                return new AddCommand("deadline", arguments);
             case "event":
-                return new AddCommand("event", arguments);
-            case "mark": {
-                int index = parseIndex(arguments, "mark");
-                return new MarkCommand(index);
-            }
-            case "unmark": {
-                int index = parseIndex(arguments, "unmark");
-                return new UnmarkCommand(index);
-            }
-            case "delete": {
-                int index = parseIndex(arguments, "delete");
-                return new DeleteCommand(index);
-            }
-            case "agenda": {
-                LocalDateTime date = parseDate(arguments);
-                return new AgendaCommand(date.toLocalDate());
-            }
+                return new AddCommand(commandWord, arguments);
+            case "mark":
+                return new MarkCommand(parseIndex(arguments, "mark"));
+            case "unmark":
+                return new UnmarkCommand(parseIndex(arguments, "unmark"));
+            case "delete":
+                return new DeleteCommand(parseIndex(arguments, "delete"));
+            case "agenda":
+                return new AgendaCommand(parseDate(arguments));
             case "help":
                 return new HelpCommand();
             case "find":
-                return new FindCommand(arguments.split(" "));
+                return new FindCommand(arguments.split("\\s+")); // Handle multiple keywords properly
             default:
-                throw new TaskMasterException("Unknown command: " + commandWord);
+                throw new TaskMasterException("❌ Unknown command: `" + commandWord + "`.\nType `help` for a list of commands.");
         }
     }
 
@@ -89,17 +70,30 @@ public class Parser {
      * @throws TaskMasterException If the string cannot be parsed into a valid date-time.
      */
     public static LocalDateTime parseDateTime(String dateTimeString) throws TaskMasterException {
-        for (DateTimeFormatter formatter : SUPPORTED_DATE_FORMATS) {
-            try {
-                return LocalDateTime.parse(dateTimeString, formatter);
-            } catch (DateTimeParseException ignored) {
-                continue;
-            }
+        return SUPPORTED_DATE_FORMATS.stream()
+                .map(formatter -> tryParseDateTime(dateTimeString, formatter))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst()
+                .orElseThrow(() -> new TaskMasterException(
+                        "❌ Invalid date format: `" + dateTimeString + "`.\n"
+                                + "Supported formats: `d/M/yyyy HHmm`, `d-M-yyyy HHmm`, `yyyy-MM-dd'T'HH:mm`."
+                ));
+    }
+
+    /**
+     * Attempts to parse a date string with the given formatter.
+     *
+     * @param dateTimeString The date-time string to parse.
+     * @param formatter The formatter to use.
+     * @return An Optional containing LocalDateTime if parsing succeeds, or empty otherwise.
+     */
+    private static Optional<LocalDateTime> tryParseDateTime(String dateTimeString, DateTimeFormatter formatter) {
+        try {
+            return Optional.of(LocalDateTime.parse(dateTimeString, formatter));
+        } catch (DateTimeParseException ignored) {
+            return Optional.empty();
         }
-        throw new TaskMasterException(
-                "Invalid date format: " + dateTimeString
-                        + ". Supported formats are: d/M/yyyy HHmm, d-M-yyyy HHmm, ISO_LOCAL_DATE_TIME."
-        );
     }
 
     /**
@@ -110,7 +104,13 @@ public class Parser {
      * @throws TaskMasterException If the task cannot be parsed.
      */
     public static Task parseTask(String line) throws TaskMasterException {
-        String[] parts = line.split(",");
+        assert line != null && !line.isBlank() : "Task line should not be null or empty.";
+
+        String[] parts = line.split(",", -1);
+        if (parts.length < 3) {
+            throw new TaskMasterException("❌ Malformed task data in storage file: `" + line + "`");
+        }
+
         String type = parts[0].trim();
         boolean isDone = "1".equals(parts[1].trim());
         String description = parts[2].trim();
@@ -119,14 +119,17 @@ public class Parser {
             case "T":
                 return new ToDo(description, isDone);
             case "D":
-                LocalDateTime by = parseDateTime(parts[3].trim());
-                return new Deadline(description, isDone, by);
+                if (parts.length < 4) {
+                    throw new TaskMasterException("❌ Missing deadline date for task: `" + description + "`");
+                }
+                return new Deadline(description, isDone, parseDateTime(parts[3].trim()));
             case "E":
-                LocalDateTime from = parseDateTime(parts[3].trim());
-                LocalDateTime to = parseDateTime(parts[4].trim());
-                return new Event(description, isDone, from, to);
+                if (parts.length < 5) {
+                    throw new TaskMasterException("❌ Missing event dates for task: `" + description + "`");
+                }
+                return new Event(description, isDone, parseDateTime(parts[3].trim()), parseDateTime(parts[4].trim()));
             default:
-                throw new TaskMasterException("Unknown task type in file: " + type);
+                throw new TaskMasterException("❌ Unknown task type in file: `" + type + "`");
         }
     }
 
@@ -139,25 +142,42 @@ public class Parser {
      * @throws TaskMasterException If the index is invalid.
      */
     private static int parseIndex(String arguments, String command) throws TaskMasterException {
+        if (arguments.isBlank()) {
+            throw new TaskMasterException("⚠️ `" + command + "` command requires a valid task number.");
+        }
         try {
-            return Integer.parseInt(arguments.trim());
+            int index = Integer.parseInt(arguments.trim());
+            if (index <= 0) {
+                throw new TaskMasterException("❌ Invalid task number. It must be a positive integer.");
+            }
+            return index;
         } catch (NumberFormatException e) {
-            throw new TaskMasterException("Invalid index provided for " + command + " command. Please enter a valid number.");
+            throw new TaskMasterException("❌ Invalid task number: `" + arguments + "`. Please enter a number.");
         }
     }
 
     /**
      * Parses a date for commands like agenda.
      *
-     * @param arguments The arguments passed with the command.
+     *
      * @return A LocalDateTime object representing the date.
      * @throws TaskMasterException If the date is invalid.
      */
-    private static LocalDateTime parseDate(String arguments) throws TaskMasterException {
-        try {
-            return parseDateTime(arguments.trim());
-        } catch (TaskMasterException e) {
-            throw new TaskMasterException("Invalid date provided for agenda command.\n" + e.getMessage());
+    public static LocalDate parseDate(String dateString) throws TaskMasterException {
+        List<DateTimeFormatter> dateFormats = Arrays.asList(
+                DateTimeFormatter.ofPattern("d/M/yyyy"),
+                DateTimeFormatter.ofPattern("d-M-yyyy"),
+                DateTimeFormatter.ISO_LOCAL_DATE
+        );
+
+        for (DateTimeFormatter formatter : dateFormats) {
+            try {
+                return LocalDate.parse(dateString, formatter);
+            } catch (DateTimeParseException ignored) {}
         }
+
+        throw new TaskMasterException("❌ Invalid date format: `" + dateString + "`.\n"
+                + "Supported formats: `d/M/yyyy`, `d-M-yyyy`, `yyyy-MM-dd`.");
     }
+
 }
