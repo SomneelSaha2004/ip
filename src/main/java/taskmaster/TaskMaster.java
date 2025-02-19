@@ -25,7 +25,6 @@ public class TaskMaster {
         TaskList tempTasks;
         try {
             tempTasks = new TaskList(storage.load());
-            System.out.println(tempTasks);
         } catch (IOException e) {
             tempTasks = new TaskList(new ArrayList<>());
         }
