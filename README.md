@@ -105,6 +105,3 @@ Displays the list of commands
 
 > bye
 Goodbye! Hope to see you again soon.
-
-
-
