@@ -16,7 +16,7 @@ public class AgendaCommand extends Command {
     /**
      * Constructs an AgendaCommand.
      *
-     * @param date The date to list tasks for.
+     * @param date The date to list tasks due on.
      */
     public AgendaCommand(LocalDate date) {
         this.date = date;
