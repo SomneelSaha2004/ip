@@ -44,4 +44,5 @@ public class AgendaCommand extends Command {
         }
         return response.toString().trim();
     }
+
 }
