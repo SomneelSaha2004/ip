@@ -3,8 +3,8 @@ package taskmaster.commands;
 import java.util.Arrays;
 
 import taskmaster.storage.Storage;
-import taskmaster.utils.TaskList;
 import taskmaster.tasks.Task;
+import taskmaster.utils.TaskList;
 
 /**
  * Command to find tasks containing any of the given keywords.
@@ -18,7 +18,8 @@ public class FindCommand extends Command {
      * @param keywords The keywords to search for in task descriptions.
      */
     public FindCommand(String... keywords) {
-        assert keywords.length > 0 : "FindCommand should have at least one keyword.";
+        assert keywords.length > 0
+                : "FindCommand should have at least one keyword.";
         this.keywords = keywords;
     }
 
@@ -43,15 +44,22 @@ public class FindCommand extends Command {
         for (int i = 0; i < tasks.getTasks().size(); i++) {
             Task task = tasks.getTasks().get(i);
             boolean matches = Arrays.stream(keywords)
-                    .allMatch(key -> task.getTaskDescription().toLowerCase().contains(key.toLowerCase()));
+                    .allMatch(key -> task.getTaskDescription()
+                            .toLowerCase()
+                            .contains(key.toLowerCase())
+                    );
 
             if (matches) {
-                response.append((++count)).append(". ").append(task).append("\n");
+                response.append(++count)
+                        .append(". ")
+                        .append(task)
+                        .append("\n");
             }
         }
 
         if (count == 0) {
-            return "No matching tasks found for keywords: " + String.join(", ", keywords);
+            return "No matching tasks found for keywords: "
+                    + String.join(", ", keywords);
         }
 
         return response.toString().trim();

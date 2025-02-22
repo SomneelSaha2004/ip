@@ -1,5 +1,7 @@
 package taskmaster.commands;
 
+import java.time.LocalDateTime;
+
 import taskmaster.exceptions.TaskMasterException;
 import taskmaster.parser.Parser;
 import taskmaster.storage.Storage;
@@ -7,8 +9,6 @@ import taskmaster.tasks.Deadline;
 import taskmaster.tasks.Event;
 import taskmaster.tasks.ToDo;
 import taskmaster.utils.TaskList;
-
-import java.time.LocalDateTime;
 
 /**
  * Command to add a task (ToDo, Deadline, or Event).
@@ -31,16 +31,19 @@ public class AddCommand extends Command {
     @Override
     public String execute(TaskList tasks, Storage storage) throws TaskMasterException {
         switch (taskType.toLowerCase()) {
-            case "todo":
+            case "todo" -> {
                 return handleToDo(tasks);
-            case "deadline":
+            }
+            case "deadline" -> {
                 return handleDeadline(tasks);
-            case "event":
+            }
+            case "event" -> {
                 return handleEvent(tasks);
-            default:
-                throw new TaskMasterException(
-                        String.format("Unknown task type: %s. Valid types: todo, deadline, event.", taskType)
-                );
+            }
+            default -> throw new TaskMasterException(
+                    "Unknown task type: %s. Valid types: todo, deadline, event."
+                            .formatted(taskType)
+            );
         }
     }
 
@@ -49,8 +52,10 @@ public class AddCommand extends Command {
      */
     private String handleToDo(TaskList tasks) throws TaskMasterException {
         if (arguments.isBlank()) {
-            throw new TaskMasterException("❌ Error: The description of a todo cannot be empty.\n" +
-                    "Usage: todo <task description>");
+            throw new TaskMasterException(
+                    "❌ Error: The description of a todo cannot be empty.\n"
+                            + "Usage: todo <task description>"
+            );
         }
         ToDo todo = new ToDo(arguments);
         tasks.addTask(todo);
@@ -61,7 +66,9 @@ public class AddCommand extends Command {
      * Handles adding a Deadline task.
      */
     private String handleDeadline(TaskList tasks) throws TaskMasterException {
-        String[] parts = splitInput(arguments, "/by", "deadline <task> /by <deadline>");
+        String[] parts = splitInput(arguments, "/by",
+                "deadline <task> /by <deadline>"
+        );
         LocalDateTime byDate = Parser.parseDateTime(parts[1]);
         Deadline deadline = new Deadline(parts[0], byDate);
         tasks.addTask(deadline);
@@ -72,8 +79,12 @@ public class AddCommand extends Command {
      * Handles adding an Event task.
      */
     private String handleEvent(TaskList tasks) throws TaskMasterException {
-        String[] parts = splitInput(arguments, "/from", "event <task> /from <start> /to <end>");
-        String[] timeParts = splitInput(parts[1], "/to", "event <task> /from <start> /to <end>");
+        String[] parts = splitInput(arguments, "/from",
+                "event <task> /from <start> /to <end>"
+        );
+        String[] timeParts = splitInput(parts[1], "/to",
+                "event <task> /from <start> /to <end>"
+        );
         LocalDateTime from = Parser.parseDateTime(timeParts[0]);
         LocalDateTime to = Parser.parseDateTime(timeParts[1]);
 
@@ -91,10 +102,13 @@ public class AddCommand extends Command {
      * @return A string array with the split values.
      * @throws TaskMasterException if the format is invalid.
      */
-    private String[] splitInput(String input, String delimiter, String errorMessage) throws TaskMasterException {
+    private String[] splitInput(String input, String delimiter, String errorMessage)
+            throws TaskMasterException {
         String[] parts = input.split(delimiter, 2);
         if (parts.length < 2) {
-            throw new TaskMasterException("❌ Error: Invalid format.\nUsage: " + errorMessage);
+            throw new TaskMasterException(
+                    "❌ Error: Invalid format.\nUsage: " + errorMessage
+            );
         }
         return new String[]{parts[0].trim(), parts[1].trim()};
     }
@@ -106,7 +120,7 @@ public class AddCommand extends Command {
      * @return The formatted response string.
      */
     private String formatTaskResponse(Object task) {
-        return String.format("✅ Task added successfully:\n  %s", task);
+        return "✅ Task added successfully:\n  %s".formatted(task);
     }
 
     public String getTaskType() {

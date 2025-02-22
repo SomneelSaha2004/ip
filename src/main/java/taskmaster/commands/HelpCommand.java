@@ -25,29 +25,29 @@ public class HelpCommand extends Command {
             TASK MANAGEMENT COMMANDS:
             -----------------------------------------------------
             [*] list               - Lists all tasks.
-            [*] todo DESC          - Adds a to-do task.  
+            [*] todo DESC          - Adds a to-do task.
                 (e.g., todo Read book)
-            [*] deadline DESC /by DATE_TIME  
-                - Adds a deadline task.  
+            [*] deadline DESC /by DATE_TIME
+                - Adds a deadline task.
                 (e.g., deadline Submit report /by 02/12/2019 1800)
-            [*] event DESC /from START /to END  
-                - Adds an event task.  
+            [*] event DESC /from START /to END
+                - Adds an event task.
                 (e.g., event Meeting /from 02/12/2019 0900 /to 02/12/2019 1100)
 
             TASK STATUS & MODIFICATION:
             -----------------------------------------------------
-            [*] mark INDEX         - Marks task as done.  
+            [*] mark INDEX         - Marks task as done.
                 (e.g., mark 3)
-            [*] unmark INDEX       - Marks task as not done.  
+            [*] unmark INDEX       - Marks task as not done.
                 (e.g., unmark 3)
-            [*] delete INDEX       - Deletes a task.  
+            [*] delete INDEX       - Deletes a task.
                 (e.g., delete 2)
 
             SCHEDULE & SEARCH:
             -----------------------------------------------------
-            [*] agenda DATE        - Lists tasks due on a date.  
+            [*] agenda DATE        - Lists tasks due on a date.
                 (e.g., agenda 02/12/2019)
-            [*] find KEYWORD       - Finds tasks containing a keyword.  
+            [*] find KEYWORD       - Finds tasks containing a keyword.
                 (e.g., find book)
 
             OTHER COMMANDS:

@@ -2,6 +2,7 @@ package taskmaster;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import taskmaster.commands.Command;
 import taskmaster.exceptions.TaskMasterException;
 import taskmaster.parser.Parser;
@@ -47,10 +48,13 @@ public class TaskMaster {
 
             // Write changes to storage after successful command execution
             storage.save(tasks.getTasks());
-            if(command.isExit()){
+
+            if (command.isExit()) {
                 System.exit(0);
             }
-            return "My glorious king\n"+response;
+
+            return "My glorious king\n" + response;
+
         } catch (TaskMasterException e) {
             return "Error: " + e.getMessage();
         } catch (IOException ioException) {

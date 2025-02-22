@@ -8,9 +8,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import taskmaster.commands.*;
+import taskmaster.commands.AddCommand;
+import taskmaster.commands.AgendaCommand;
+import taskmaster.commands.Command;
+import taskmaster.commands.DeleteCommand;
+import taskmaster.commands.ExitCommand;
+import taskmaster.commands.FindCommand;
+import taskmaster.commands.HelpCommand;
+import taskmaster.commands.ListCommand;
+import taskmaster.commands.MarkCommand;
+import taskmaster.commands.UnmarkCommand;
+
 import taskmaster.exceptions.TaskMasterException;
-import taskmaster.tasks.*;
+import taskmaster.tasks.Deadline;
+import taskmaster.tasks.Event;
+import taskmaster.tasks.Task;
+import taskmaster.tasks.ToDo;
 
 /**
  * Parses user commands and tasks from input.
@@ -56,9 +69,12 @@ public class Parser {
             case "help":
                 return new HelpCommand();
             case "find":
-                return new FindCommand(arguments.split("\\s+")); // Handle multiple keywords properly
+                return new FindCommand(arguments.split("\\s+"));
             default:
-                throw new TaskMasterException("❌ Unknown command: `" + commandWord + "`.\nType `help` for a list of commands.");
+                throw new TaskMasterException(
+                        "❌ Unknown command: `" + commandWord + "`.\n"
+                                + "Type `help` for a list of commands."
+                );
         }
     }
 
@@ -127,7 +143,8 @@ public class Parser {
                 if (parts.length < 5) {
                     throw new TaskMasterException("❌ Missing event dates for task: `" + description + "`");
                 }
-                return new Event(description, isDone, parseDateTime(parts[3].trim()), parseDateTime(parts[4].trim()));
+                return new Event(description, isDone, parseDateTime(parts[3].trim()),
+                        parseDateTime(parts[4].trim()));
             default:
                 throw new TaskMasterException("❌ Unknown task type in file: `" + type + "`");
         }
@@ -159,8 +176,8 @@ public class Parser {
     /**
      * Parses a date for commands like agenda.
      *
-     *
-     * @return A LocalDateTime object representing the date.
+     * @param dateString The date string to parse.
+     * @return A LocalDate object representing the date.
      * @throws TaskMasterException If the date is invalid.
      */
     public static LocalDate parseDate(String dateString) throws TaskMasterException {
@@ -173,11 +190,12 @@ public class Parser {
         for (DateTimeFormatter formatter : dateFormats) {
             try {
                 return LocalDate.parse(dateString, formatter);
-            } catch (DateTimeParseException ignored) {}
+            } catch (DateTimeParseException ignored) {
+                continue;
+            }
         }
 
         throw new TaskMasterException("❌ Invalid date format: `" + dateString + "`.\n"
                 + "Supported formats: `d/M/yyyy`, `d-M-yyyy`, `yyyy-MM-dd`.");
     }
-
 }
