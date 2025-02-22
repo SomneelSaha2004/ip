@@ -69,6 +69,12 @@ public class AddCommand extends Command {
         String[] parts = splitInput(arguments, "/by",
                 "deadline <task> /by <deadline>"
         );
+        if (parts[0].isBlank()) {
+            throw new TaskMasterException(
+                    "❌ Error: The description of a deadline cannot be empty.\n"
+                            + "Usage: deadline <task> /by <deadline>"
+            );
+        }
         LocalDateTime byDate = Parser.parseDateTime(parts[1]);
         Deadline deadline = new Deadline(parts[0], byDate);
         tasks.addTask(deadline);
@@ -87,7 +93,18 @@ public class AddCommand extends Command {
         );
         LocalDateTime from = Parser.parseDateTime(timeParts[0]);
         LocalDateTime to = Parser.parseDateTime(timeParts[1]);
-
+        if (parts[0].isBlank()) {
+            throw new TaskMasterException(
+                    "❌ Error: The description of a event cannot be empty.\n"
+                            + "Usage: deadline <task> /by <deadline>"
+            );
+        }
+        if(from.isAfter(to)) {
+            throw new TaskMasterException(
+                    "❌ Error: The start date of an event cannot be after the end date.\n"
+                            + "Usage: event <task> /from <start> /to <end>"
+            );
+        }
         Event event = new Event(parts[0], from, to);
         tasks.addTask(event);
         return formatTaskResponse(event);
