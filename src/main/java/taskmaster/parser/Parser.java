@@ -72,7 +72,7 @@ public class Parser {
                 return new FindCommand(arguments.split("\\s+"));
             default:
                 throw new TaskMasterException(
-                        "❌ Unknown command: `" + commandWord + "`.\n"
+                        "[X] Unknown command: `" + commandWord + "`.\n"
                                 + "Type `help` for a list of commands."
                 );
         }
@@ -92,7 +92,7 @@ public class Parser {
                 .map(Optional::get)
                 .findFirst()
                 .orElseThrow(() -> new TaskMasterException(
-                        "❌ Invalid date format: `" + dateTimeString + "`.\n"
+                        "[X] Invalid date format: `" + dateTimeString + "`.\n"
                                 + "Supported formats: `d/M/yyyy HHmm`, `d-M-yyyy HHmm`, `yyyy-MM-dd'T'HH:mm`."
                 ));
     }
@@ -124,7 +124,7 @@ public class Parser {
 
         String[] parts = line.split(",", -1);
         if (parts.length < 3) {
-            throw new TaskMasterException("❌ Malformed task data in storage file: `" + line + "`");
+            throw new TaskMasterException("[X] Malformed task data in storage file: `" + line + "`");
         }
 
         String type = parts[0].trim();
@@ -136,17 +136,17 @@ public class Parser {
                 return new ToDo(description, isDone);
             case "D":
                 if (parts.length < 4) {
-                    throw new TaskMasterException("❌ Missing deadline date for task: `" + description + "`");
+                    throw new TaskMasterException("[X] Missing deadline date for task: `" + description + "`");
                 }
                 return new Deadline(description, isDone, parseDateTime(parts[3].trim()));
             case "E":
                 if (parts.length < 5) {
-                    throw new TaskMasterException("❌ Missing event dates for task: `" + description + "`");
+                    throw new TaskMasterException("[X] Missing event dates for task: `" + description + "`");
                 }
                 return new Event(description, isDone, parseDateTime(parts[3].trim()),
                         parseDateTime(parts[4].trim()));
             default:
-                throw new TaskMasterException("❌ Unknown task type in file: `" + type + "`");
+                throw new TaskMasterException("[X] Unknown task type in file: `" + type + "`");
         }
     }
 
@@ -160,16 +160,16 @@ public class Parser {
      */
     private static int parseIndex(String arguments, String command) throws TaskMasterException {
         if (arguments.isBlank()) {
-            throw new TaskMasterException("⚠️ `" + command + "` command requires a valid task number.");
+            throw new TaskMasterException("[X] `" + command + "` command requires a valid task number.");
         }
         try {
             int index = Integer.parseInt(arguments.trim());
             if (index <= 0) {
-                throw new TaskMasterException("❌ Invalid task number. It must be a positive integer.");
+                throw new TaskMasterException("[X] Invalid task number. It must be a positive integer.");
             }
             return index;
         } catch (NumberFormatException e) {
-            throw new TaskMasterException("❌ Invalid task number: `" + arguments + "`. Please enter a number.");
+            throw new TaskMasterException("[X] Invalid task number: `" + arguments + "`. Please enter a number.");
         }
     }
 
@@ -195,7 +195,7 @@ public class Parser {
             }
         }
 
-        throw new TaskMasterException("❌ Invalid date format: `" + dateString + "`.\n"
+        throw new TaskMasterException("[X] Invalid date format: `" + dateString + "`.\n"
                 + "Supported formats: `d/M/yyyy`, `d-M-yyyy`, `yyyy-MM-dd`.");
     }
 }

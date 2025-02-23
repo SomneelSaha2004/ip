@@ -22,26 +22,25 @@
 .button {
     -fx-background-color: linear-gradient(to bottom right, #007bff, #0056d2);
     -fx-text-fill: white;
-    -fx-font-size: 16;
+    -fx-font-size: 14;    /* Adjusted for better fit */
     -fx-font-weight: bold;
-    -fx-padding: 8 20;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
+    -fx-padding: 8 12;    /* Adjusted padding */
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 4, 0.3, 2, 2);
+    -fx-cursor: hand;
 }
 
-/* Send Button Hover Effect */
 .button:hover {
     -fx-background-color: #0056d2;
-    -fx-cursor: hand;
-    -fx-font-size: 17;
+    -fx-font-size: 14;   /* Same as normal state to avoid size change */
 }
 
-/* Send Button Pressed */
 .button:pressed {
     -fx-background-color: #003e9c;
-    -fx-padding: 8 18;
+    -fx-padding: 7 11;   /* Slightly reduced padding */
 }
+
 
 /* Scroll Pane */
 .scroll-pane,

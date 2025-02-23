@@ -53,7 +53,7 @@ public class AddCommand extends Command {
     private String handleToDo(TaskList tasks) throws TaskMasterException {
         if (arguments.isBlank()) {
             throw new TaskMasterException(
-                    "❌ Error: The description of a todo cannot be empty.\n"
+                    "[X] Error: The description of a todo cannot be empty.\n"
                             + "Usage: todo <task description>"
             );
         }
@@ -71,7 +71,7 @@ public class AddCommand extends Command {
         );
         if (parts[0].isBlank()) {
             throw new TaskMasterException(
-                    "❌ Error: The description of a deadline cannot be empty.\n"
+                    "[X] Error: The description of a deadline cannot be empty.\n"
                             + "Usage: deadline <task> /by <deadline>"
             );
         }
@@ -95,13 +95,13 @@ public class AddCommand extends Command {
         LocalDateTime to = Parser.parseDateTime(timeParts[1]);
         if (parts[0].isBlank()) {
             throw new TaskMasterException(
-                    "❌ Error: The description of a event cannot be empty.\n"
+                    "[X] Error: The description of a event cannot be empty.\n"
                             + "Usage: deadline <task> /by <deadline>"
             );
         }
         if(from.isAfter(to)) {
             throw new TaskMasterException(
-                    "❌ Error: The start date of an event cannot be after the end date.\n"
+                    "[X] Error: The start date of an event cannot be after the end date.\n"
                             + "Usage: event <task> /from <start> /to <end>"
             );
         }
@@ -124,7 +124,7 @@ public class AddCommand extends Command {
         String[] parts = input.split(delimiter, 2);
         if (parts.length < 2) {
             throw new TaskMasterException(
-                    "❌ Error: Invalid format.\nUsage: " + errorMessage
+                    "[X] Error: Invalid format.\nUsage: " + errorMessage
             );
         }
         return new String[]{parts[0].trim(), parts[1].trim()};
@@ -137,7 +137,7 @@ public class AddCommand extends Command {
      * @return The formatted response string.
      */
     private String formatTaskResponse(Object task) {
-        return "✅ Task added successfully:\n  %s".formatted(task);
+        return "[✓] Task added successfully:\n  %s".formatted(task);
     }
 
     public String getTaskType() {
